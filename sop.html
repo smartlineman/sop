@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTR Troubleshooting Assistant</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #e67e22;
+            --success-color: #27ae60;
+            --danger-color: #c0392b;
+            --light-bg: #ecf0f1;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            direction: ltr;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: left;
+            border-top: 5px solid var(--accent-color);
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .content-area {
+            padding: 30px;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-actions {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .hub-btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.5);
+            color: white;
+            border-radius: 999px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .alert-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .alert-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .alert-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            box-shadow: 0 0 8px rgba(255,255,255,0.6);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .alert-btn.active {
+            background: rgba(230,126,34,0.25);
+            border-color: rgba(230,126,34,0.6);
+        }
+
+        .alert-btn.active .alert-indicator {
+            background: #e67e22;
+            box-shadow: 0 0 10px rgba(230,126,34,0.8);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .sop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 12px;
+            width: 100%;
+        }
+
+        .sop-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px 18px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            text-align: left;
+            cursor: pointer;
+            border: 1px solid #eef0f2;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sop-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 16px rgba(0,0,0,0.08);
+        }
+
+        .sop-card h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        .sop-card p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #5a5a5a;
+            line-height: 1.4;
+        }
+
+        .sop-tags {
+            margin-top: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .sop-tags span {
+            background: rgba(44,62,80,0.06);
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .ostad-note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            color: #856404;
+            text-align: left;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 4px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            width: 100%;
+        }
+
+        button {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-positive {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-negative {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-neutral {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-restart {
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: 20px;
+        }
+
+        .result-box {
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .result-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .result-fail {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .progress-indicator {
+            padding: 10px;
+            background: #eee;
+            font-size: 0.8rem;
+            color: #777;
+            text-align: center;
+        }
+
+        .mini-map {
+            padding: 15px 20px;
+            background: rgba(44,62,80,0.04);
+            font-size: 0.85rem;
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+        }
+
+        .mini-map-empty {
+            color: #999;
+            font-style: italic;
+        }
+
+        .mini-map-chip {
+            border: none;
+            background: #fff;
+            border-radius: 999px;
+            padding: 5px 12px;
+            font-size: 0.78rem;
+            color: #2c3e50;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            width: 100%;
+            text-align: left;
+            border-left: 4px solid rgba(44,62,80,0.25);
+            border-radius: 10px;
+            padding: 12px 14px;
+            gap: 6px;
+        }
+
+        .mini-map-chip[disabled] {
+            background: var(--accent-color);
+            color: #fff;
+            cursor: default;
+            box-shadow: none;
+            border-left-color: #fff;
+        }
+
+        .mini-map-chip[disabled] .mini-map-response,
+        .mini-map-chip[disabled] .mini-map-meta,
+        .mini-map-chip[disabled] .mini-map-step,
+        .mini-map-chip[disabled] .mini-map-response-label,
+        .mini-map-chip[disabled] .mini-map-label {
+            color: #fff;
+        }
+
+        .mini-map-sep {
+            color: #bbb;
+            text-align: center;
+            font-size: 0.7rem;
+        }
+
+        .trail-callout {
+            padding: 10px 16px;
+            background: rgba(44,62,80,0.08);
+            color: #2c3e50;
+            font-size: 0.85rem;
+            text-align: center;
+            border-bottom: 1px dashed rgba(0,0,0,0.08);
+        }
+
+        @media (max-width: 640px) {
+            .trail-callout {
+                display: none;
+            }
+        }
+
+        .empty-state {
+            padding: 20px;
+            background: rgba(44,62,80,0.05);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #555;
+            text-align: left;
+        }
+
+        .mini-map-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .mini-map-response {
+            font-size: 0.8rem;
+            color: #6c7a89;
+            display: flex;
+            gap: 6px;
+            align-items: baseline;
+        }
+
+        .mini-map-response-label {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.65rem;
+            color: rgba(0,0,0,0.6);
+        }
+
+        .mini-map-response-empty {
+            font-style: italic;
+        }
+
+        .mini-map-meta {
+            font-size: 0.7rem;
+            color: rgba(0,0,0,0.6);
+        }
+
+        .mini-map-step {
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            color: var(--accent-color);
+            text-transform: uppercase;
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Flowchart Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 1000px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn:hover { color: black; }
+        .mermaid { text-align: center; }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .flowchart-btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: var(--primary-color);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+
+        .flowchart-btn:hover {
+            background: var(--accent-color);
+        }
+
+        .flowchart-title {
+            margin: 10px 0 0;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            text-align: left;
+        }
+
+        .download-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1200;
+            padding: 20px;
+        }
+
+        .download-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .download-modal-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 28px 32px;
+            box-shadow: 0 18px 45px rgba(0,0,0,0.25);
+            text-align: center;
+            width: min(320px, 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .download-spinner {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 8px;
+            border-radius: 50%;
+            border: 4px solid rgba(44,62,80,0.2);
+            border-top-color: var(--accent-color);
+            animation: spin 0.9s linear infinite;
+        }
+
+        .download-title {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .download-subtext {
+            font-size: 0.9rem;
+            color: #6c7a89;
+            margin: 0;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .panel-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 900;
+        }
+
+        .panel-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .progress-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 320px;
+            max-width: 85vw;
+            height: 100vh;
+            background: #fff;
+            box-shadow: -12px 0 35px rgba(0,0,0,0.18);
+            transform: translateX(100%);
+            transition: transform 0.4s ease;
+            z-index: 950;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-panel.open {
+            transform: translateX(0);
+        }
+
+        .filter-panel {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            width: 280px;
+            max-width: 85vw;
+            height: calc(100vh - 40px);
+            background: #fff;
+            box-shadow: 12px 0 35px rgba(0,0,0,0.18);
+            transform: translateX(-105%);
+            transition: transform 0.4s ease;
+            z-index: 940;
+            border-radius: 0 18px 18px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-panel.open {
+            transform: translateX(0);
+        }
+
+        .progress-panel-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .filter-panel-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .filter-panel-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        .filter-panel-header p {
+            margin: 4px 0 0;
+            font-size: 0.8rem;
+            color: #6c7a89;
+        }
+
+        .filter-panel-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        .progress-panel-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        .progress-panel-header p {
+            margin: 4px 0 0;
+            font-size: 0.8rem;
+            color: #6c7a89;
+        }
+
+        .panel-close-btn {
+            display: none;
+        }
+
+        .progress-panel-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .filter-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid #eef0f2;
+            border-radius: 12px;
+            background: rgba(44,62,80,0.02);
+        }
+
+        .filter-option input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .filter-option span {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .filter-panel-footer {
+            padding: 14px 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.85rem;
+            color: #6c7a89;
+        }
+
+        .filter-clear-btn {
+            background: rgba(230,126,34,0.15);
+            border: 1px solid rgba(230,126,34,0.5);
+            color: var(--accent-color);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .filter-clear-btn:hover {
+            background: rgba(230,126,34,0.25);
+        }
+
+        .progress-launcher {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 999px 0 0 999px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 960;
+            font-weight: 600;
+        }
+
+        .progress-launcher:hover {
+            background: var(--accent-color);
+        }
+
+        .launcher-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .progress-launcher.active .launcher-arrow {
+            transform: rotate(180deg);
+        }
+
+        .progress-launcher.ping {
+            animation: trailPing 0.9s ease;
+        }
+
+        .filter-launcher {
+            position: fixed;
+            top: 30%;
+            left: 0;
+            transform: translateY(-50%);
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 0 999px 999px 0;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 960;
+            font-weight: 600;
+        }
+
+        .filter-launcher:hover {
+            background: var(--accent-color);
+        }
+
+        .filter-launcher.active {
+            background: rgba(230,126,34,0.85);
+        }
+
+        .filter-launcher.active .launcher-arrow {
+            transform: rotate(180deg);
+        }
+
+        @keyframes trailPing {
+            0% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.1); }
+            100% { transform: translateY(-50%) scale(1); }
+        }
+
+        body.trail-panel-open {
+            overflow: hidden;
+        }
+
+        .progress-panel .mini-map {
+            border-bottom: none;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Distribution Field SOP Hub</h1>
+        <p>কমন টাস্ক সিলেক্ট করে গাইড চালাও</p>
+        <div class="header-actions">
+            <button class="hub-btn" onclick="returnToHub()">All SOPs</button>
+            <button id="flowchartBtn" class="hub-btn" onclick="showFlowchart()" disabled>Show Flowchart</button>
+            <button id="alertToggleBtn" class="hub-btn alert-btn" onclick="toggleAlertMode()">
+                <span class="alert-indicator"></span>
+                <span class="alert-label" id="alertLabelText">Hands-free Alerts: Off</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="progress-indicator" id="step-tracker">Select an SOP to begin</div>
+    <div class="trail-callout">
+        Progress trail auto-saves to the side panel ↗ tap the floating arrow to review.
+    </div>
+
+    <div class="content-area" id="game-interface">
+        <!-- Content will be injected here by JavaScript -->
+    </div>
+</div>
+
+<button id="filter-launcher" class="filter-launcher" onclick="toggleFilterPanel()">
+    <span class="launcher-arrow">⮞</span>
+    <span class="launcher-label">Filter</span>
+</button>
+
+<button id="progress-launcher" class="progress-launcher" onclick="toggleProgressPanel()">
+    <span class="launcher-label">Trail</span>
+    <span class="launcher-arrow">⮜</span>
+ </button>
+
+<div id="panel-overlay" class="panel-overlay" onclick="closeAllPanels()"></div>
+
+<div id="filter-panel" class="filter-panel" aria-hidden="true">
+    <div class="filter-panel-header">
+        <div>
+            <h3>Filter SOPs</h3>
+            <p>Select keywords to narrow the list</p>
+        </div>
+        <div class="filter-panel-actions">
+            <button class="filter-clear-btn" onclick="clearFilters()">Reset</button>
+        </div>
+    </div>
+    <div class="filter-panel-content" id="filter-options">
+        <span class="mini-map-empty">Loading keywords…</span>
+    </div>
+    <div class="filter-panel-footer">
+        <span id="filter-summary">All SOPs visible</span>
+    </div>
+</div>
+
+<div id="progress-panel" class="progress-panel" aria-hidden="true">
+    <div class="progress-panel-header">
+        <div>
+            <h3>Progress Trail</h3>
+            <p>Latest steps & responses</p>
+        </div>
+    </div>
+    <div class="progress-panel-content">
+        <div class="mini-map" id="step-mini-map">
+            <span class="mini-map-empty">Progress trail will appear here</span>
+        </div>
+    </div>
+</div>
+
+<!-- Flowchart Modal -->
+<div id="flowchartModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeFlowchart()">&times;</span>
+        <h2 id="flowchart-title" class="flowchart-title">SOP Flowchart</h2>
+        <div class="modal-actions">
+            <button class="flowchart-btn" onclick="downloadFlowchartPDF()">Download Flowchart PDF</button>
+        </div>
+        <div class="mermaid" id="mermaid-graph"></div>
+    </div>
+</div>
+
+<div id="download-modal" class="download-modal" aria-hidden="true">
+    <div class="download-modal-card">
+        <div class="download-spinner"></div>
+        <p id="download-message" class="download-title">Preparing PDF…</p>
+        <p class="download-subtext">We will auto-download once the flowchart is ready.</p>
+    </div>
+</div>
+
+<script>
+    const sopCatalog = [
+        {
+            id: 'dtr',
+            title: 'DTR Breakdown & Tit-bit Repair',
+            subtitle: 'লাইনম্যানের ডিজিটাল গাইড',
+            summary: 'ট্রান্সফরমার ফল্ট ডায়াগনোসিস, মেগার টেস্ট এবং সাইটে টিট-বিট রিকভারি।',
+            json: 'dtr_data.json',
+            tags: ['DTR', 'Breakdown'],
+            icon: '⚡'
+        },
+        {
+            id: 'ht_line',
+            title: '11kV Line Restoration',
+            subtitle: 'ফিডার ব্রেকডাউন SOP',
+            summary: 'PTW, প্যাট্রোলিং, জাম্পার/গাছ জটিলতা এবং রি-চার্জিং সিকোয়েন্স।',
+            json: 'ht_line_data.json',
+            tags: ['11kV', 'Patrolling'],
+            icon: '🌳'
+        },
+        {
+            id: 'lt_service',
+            title: 'LT Feeder & Service Fault',
+            subtitle: 'লো-টেনশন ফিল্ড গাইড',
+            summary: 'পিলার বক্স, আউটগোয়িং কেবল, লোড ব্যালেন্সিং ও স্ল্যাব জব চেক।',
+            json: 'lt_service_data.json',
+            tags: ['LT', 'No Supply'],
+            icon: '🔌'
+        },
+        {
+            id: 'dtr_pm',
+            title: 'DTR Preventive Maintenance',
+            subtitle: 'সূচিবদ্ধ মেইনটেনেন্স SOP',
+            summary: 'আইসোলেশন, টর্কিং, অয়েল অ্যানালাইসিস এবং রেকর্ড আপডেট চেকলিস্ট।',
+            json: 'dtr_pm_data.json',
+            tags: ['Maintenance', 'Checklist'],
+            icon: '🧰'
+        },
+        {
+            id: 'ptr_buchholz',
+            title: 'PTR Buchholz Alarm',
+            subtitle: 'বড় ট্রান্সফরমার প্রটেকশন',
+            summary: 'বুচহলজ অ্যালার্ম/ট্রিপ হলে অন-ডিউটি অপারেটরের করণীয় ধাপে ধাপে নির্দেশনা।',
+            json: 'ptr_buchholz_data.json',
+            tags: ['PTR', 'Protection'],
+            icon: '🛡️'
+        },
+        {
+            id: 'domestic_meter',
+            title: 'Domestic Meter Install',
+            subtitle: 'নতুন সংযোগ SOP',
+            summary: 'ওয়ার্ক-অর্ডার যাচাই থেকে সিলিং ও অ্যাপ লগ আপডেট পর্যন্ত সম্পূর্ণ ধাপ।',
+            json: 'new_meter_install_data.json',
+            tags: ['Meter', 'New Connection'],
+            icon: '🏠'
+        },
+        {
+            id: 'pin_insulator',
+            title: '11kV Pin Insulator',
+            subtitle: 'ব্রেকডাউন রিপ্লেসমেন্ট',
+            summary: 'প্যাট্রোলিংয়ে চিপ করা ইনসুলেটর বদলানোর পারমিট, PPE ও চার্জিং ধাপসমূহ।',
+            json: 'pin_insulator_replacement_data.json',
+            tags: ['11kV', 'Maintenance'],
+            icon: '🪜'
+        }
+    ];
+
+    let steps = {};
+    let startNodeKey = 'start';
+    let activeSop = null;
+    let stepHistory = [];
+    let activeSopDisplayTitle = '';
+    let alertsEnabled = false;
+    let lastAlertedStepKey = null;
+    let audioContext = null;
+    const criticalKeywords = ['isolation', 'isolate', 'lockout', 'ptw', 'permit to work', '11kv', 'hv', 'high voltage', 'এলটিসি', 'আইসোলেশন', 'উচ্চ ভোল্টেজ'];
+    let filterKeywords = [];
+    let activeFilters = new Set();
+
+    const gameInterface = document.getElementById('game-interface');
+    const stepTracker = document.getElementById('step-tracker');
+    const flowchartBtn = document.getElementById('flowchartBtn');
+    const miniMapEl = document.getElementById('step-mini-map');
+    const progressPanel = document.getElementById('progress-panel');
+    const panelOverlay = document.getElementById('panel-overlay');
+    const progressLauncher = document.getElementById('progress-launcher');
+    const flowchartTitleEl = document.getElementById('flowchart-title');
+    const alertToggleBtn = document.getElementById('alertToggleBtn');
+    const alertLabelText = document.getElementById('alertLabelText');
+    const filterPanel = document.getElementById('filter-panel');
+    const filterLauncher = document.getElementById('filter-launcher');
+    const filterOptionsEl = document.getElementById('filter-options');
+    const filterSummaryEl = document.getElementById('filter-summary');
+    const downloadModalEl = document.getElementById('download-modal');
+    const downloadMessageEl = document.getElementById('download-message');
+    let trailPingTimeout = null;
+
+    if (filterOptionsEl) {
+        filterOptionsEl.addEventListener('change', event => {
+            const target = event.target;
+            if (target && target.matches('input[type="checkbox"]')) {
+                handleFilterChange(target.value, target.checked);
+            }
+        });
+    }
+
+    function initApp() {
+        mermaid.initialize({ startOnLoad: false });
+        renderSopSelection();
+        setAlertButtonState();
+        buildFilterKeywords();
+        setFilterLauncherState();
+    }
+
+    function renderSopSelection() {
+        activeSop = null;
+        steps = {};
+        startNodeKey = 'start';
+        activeSopDisplayTitle = '';
+        gameInterface.className = 'content-area';
+        document.querySelector('.header h1').textContent = 'Distribution Field SOP Hub';
+        document.querySelector('.header p').textContent = 'কমন টাস্ক সিলেক্ট করে গাইড চালাও';
+        stepTracker.innerText = 'Select an SOP to begin';
+        toggleActionButtons(false);
+        resetStepHistory();
+        updateFlowchartTitle();
+        toggleProgressPanel(false);
+        lastAlertedStepKey = null;
+
+        const filteredSops = getFilteredSops();
+        const cardsHtml = filteredSops.map(sop => {
+            const tags = (sop.tags || []).map(tag => `<span>${tag}</span>`).join('');
+            return `
+                <div class="sop-card" onclick="loadSop('${sop.id}')">
+                    <h3>${sop.title}</h3>
+                    <p>${sop.summary}</p>
+                    <div class="sop-tags">${tags}</div>
+                </div>`;
+        }).join('');
+
+        const gridMarkup = filteredSops.length ? `
+                <div class="sop-grid">
+                    ${cardsHtml}
+                </div>` : `
+                <div class="empty-state">No SOP matches the selected keywords. Adjust filters to see more tasks.</div>`;
+
+        updateFilterSummary(filteredSops.length);
+
+        gameInterface.innerHTML = `
+            <div style="width:100%">
+                <div class="question-text" style="font-size:1.1rem;">কাজ বাছাই করো ⤵</div>
+                ${gridMarkup}
+            </div>`;
+    }
+
+    async function loadSop(id) {
+        const sop = sopCatalog.find(item => item.id === id);
+        if (!sop) return;
+
+        stepTracker.innerText = 'Loading SOP...';
+        toggleActionButtons(false);
+
+        try {
+            const response = await fetch(sop.json);
+            if (!response.ok) throw new Error('HTTP error ' + response.status);
+            const data = await response.json();
+
+            steps = data.steps || {};
+            startNodeKey = (data.meta && data.meta.startNode) ? data.meta.startNode : 'start';
+
+            if (!steps[startNodeKey]) {
+                throw new Error('Start node missing in ' + sop.json);
+            }
+
+            activeSop = sop;
+            const displayTitle = (data.meta && data.meta.appTitle) || sop.title;
+            const displaySubtitle = (data.meta && data.meta.appSubtitle) || sop.subtitle || '';
+            document.querySelector('.header h1').textContent = displayTitle;
+            document.querySelector('.header p').textContent = displaySubtitle;
+            activeSopDisplayTitle = displayTitle;
+            updateFlowchartTitle();
+
+            resetStepHistory();
+            renderStep(startNodeKey);
+            toggleActionButtons(true);
+        } catch (error) {
+            console.error('Failed to load SOP data:', error);
+            gameInterface.innerHTML = `<div class="result-box result-fail">
+                <h3>Data Load Error</h3>
+                <p>Could not load <strong>${sop.json}</strong>. লোকাল সার্ভার (Live Server) দিয়ে চালাও বা JSON যাচাই করো।</p>
+            </div>`;
+            stepTracker.innerText = 'SOP load failed';
+        }
+    }
+
+    function toggleActionButtons(enable) {
+        flowchartBtn.disabled = !enable;
+    }
+
+    function buildFilterKeywords() {
+        const keywordSet = new Set();
+        sopCatalog.forEach(sop => {
+            (sop.tags || []).forEach(tag => keywordSet.add(tag));
+        });
+        filterKeywords = Array.from(keywordSet).sort((a, b) => a.localeCompare(b));
+        renderFilterOptions();
+    }
+
+    function renderFilterOptions() {
+        if (!filterOptionsEl) return;
+        if (!filterKeywords.length) {
+            filterOptionsEl.innerHTML = '<span class="mini-map-empty">No keywords available</span>';
+            return;
+        }
+        const optionsHtml = filterKeywords.map(keyword => {
+            const checked = activeFilters.has(keyword) ? 'checked' : '';
+            const safeId = `filter-${keyword.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`;
+            return `
+                <label class="filter-option" for="${safeId}">
+                    <input id="${safeId}" type="checkbox" value="${keyword}" ${checked} />
+                    <span>${keyword}</span>
+                </label>`;
+        }).join('');
+        filterOptionsEl.innerHTML = optionsHtml;
+    }
+
+    function handleFilterChange(keyword, isChecked) {
+        if (!keyword) return;
+        if (isChecked) {
+            activeFilters.add(keyword);
+        } else {
+            activeFilters.delete(keyword);
+        }
+        setFilterLauncherState();
+        renderSopSelection();
+    }
+
+    function clearFilters() {
+        if (!activeFilters.size) return;
+        activeFilters.clear();
+        renderFilterOptions();
+        setFilterLauncherState();
+        renderSopSelection();
+    }
+
+    function setFilterLauncherState() {
+        if (!filterLauncher) return;
+        filterLauncher.classList.toggle('active', activeFilters.size > 0);
+    }
+
+    function updateFilterSummary(visibleCount) {
+        if (!filterSummaryEl) return;
+        const total = sopCatalog.length;
+        if (activeFilters.size) {
+            const label = activeFilters.size === 1 ? 'filter' : 'filters';
+            filterSummaryEl.textContent = `${visibleCount} of ${total} SOPs match ${activeFilters.size} ${label}`;
+        } else {
+            filterSummaryEl.textContent = `${total} SOPs available`;
+        }
+    }
+
+    function getFilteredSops() {
+        if (!activeFilters.size) return sopCatalog;
+        const selected = Array.from(activeFilters);
+        return sopCatalog.filter(sop => {
+            const tags = sop.tags || [];
+            return selected.some(tag => tags.includes(tag));
+        });
+    }
+
+    function toggleProgressPanel(forceState = null) {
+        if (!progressPanel || !progressLauncher) return;
+        const isOpen = progressPanel.classList.contains('open');
+        const shouldOpen = forceState === null ? !isOpen : forceState;
+        progressPanel.classList.toggle('open', shouldOpen);
+        progressPanel.setAttribute('aria-hidden', (!shouldOpen).toString());
+        progressLauncher.classList.toggle('active', shouldOpen);
+        syncPanelOverlayState();
+    }
+
+    function toggleFilterPanel(forceState = null) {
+        if (!filterPanel || !filterLauncher) return;
+        const isOpen = filterPanel.classList.contains('open');
+        const shouldOpen = forceState === null ? !isOpen : forceState;
+        filterPanel.classList.toggle('open', shouldOpen);
+        filterPanel.setAttribute('aria-hidden', (!shouldOpen).toString());
+        filterLauncher.classList.toggle('active', shouldOpen);
+        syncPanelOverlayState();
+    }
+
+    function closeAllPanels() {
+        toggleProgressPanel(false);
+        toggleFilterPanel(false);
+    }
+
+    function syncPanelOverlayState() {
+        const isProgressOpen = progressPanel && progressPanel.classList.contains('open');
+        const isFilterOpen = filterPanel && filterPanel.classList.contains('open');
+        const shouldLock = Boolean(isProgressOpen || isFilterOpen);
+        document.body.classList.toggle('trail-panel-open', shouldLock);
+        if (panelOverlay) {
+            panelOverlay.classList.toggle('visible', shouldLock);
+        }
+    }
+
+    function toggleAlertMode() {
+        alertsEnabled = !alertsEnabled;
+        if (alertsEnabled) {
+            ensureAudioContext();
+            lastAlertedStepKey = null;
+        }
+        setAlertButtonState();
+    }
+
+    function setAlertButtonState() {
+        if (!alertToggleBtn) return;
+        alertToggleBtn.classList.toggle('active', alertsEnabled);
+        const indicator = alertToggleBtn.querySelector('.alert-indicator');
+        if (indicator) {
+            indicator.setAttribute('aria-hidden', 'true');
+        }
+        if (alertLabelText) {
+            alertLabelText.textContent = alertsEnabled ? 'Hands-free Alerts: On' : 'Hands-free Alerts: Off';
+        }
+    }
+
+    function ensureAudioContext() {
+        if (audioContext) return;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        audioContext = new AudioCtx();
+    }
+
+    function playAlertTone() {
+        ensureAudioContext();
+        if (!audioContext) return;
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+        const duration = 0.35;
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
+        gainNode.gain.setValueAtTime(0.001, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.2, audioContext.currentTime + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + duration);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + duration);
+    }
+
+    function triggerHapticPulse() {
+        if (navigator.vibrate) {
+            navigator.vibrate([140, 60, 140]);
+        }
+    }
+
+    function isCriticalStep(stepData) {
+        if (!stepData) return false;
+        if (Array.isArray(stepData.flags) && stepData.flags.includes('critical')) {
+            return true;
+        }
+        const textBlob = `${stepData.title || ''} ${stepData.content || ''} ${stepData.note || ''}`.toLowerCase();
+        return criticalKeywords.some(keyword => textBlob.includes(keyword.toLowerCase()));
+    }
+
+    function maybeTriggerCriticalCue(stepKey, stepData) {
+        if (!alertsEnabled) return;
+        if (!isCriticalStep(stepData)) return;
+        if (lastAlertedStepKey === stepKey) return;
+        lastAlertedStepKey = stepKey;
+        playAlertTone();
+        triggerHapticPulse();
+    }
+
+    function updateFlowchartTitle() {
+        if (!flowchartTitleEl) return;
+        const base = activeSopDisplayTitle || 'SOP Flowchart';
+        const text = activeSopDisplayTitle ? `${base} · Flowchart` : base;
+        flowchartTitleEl.textContent = text;
+    }
+
+    function pingTrailIndicator() {
+        if (!progressLauncher) return;
+        progressLauncher.classList.remove('ping');
+        void progressLauncher.offsetWidth;
+        progressLauncher.classList.add('ping');
+        if (trailPingTimeout) clearTimeout(trailPingTimeout);
+        trailPingTimeout = setTimeout(() => {
+            if (progressLauncher) {
+                progressLauncher.classList.remove('ping');
+            }
+        }, 900);
+    }
+
+    function setFlowchartProcessing(active, message = null) {
+        if (!downloadModalEl) return;
+        if (typeof message === 'string' && downloadMessageEl) {
+            downloadMessageEl.textContent = message;
+        }
+        downloadModalEl.classList.toggle('active', active);
+        downloadModalEl.setAttribute('aria-hidden', (!active).toString());
+    }
+
+    function renderStep(stepKey, fromHistory = false, responseLabel = null) {
+        const stepData = steps[stepKey];
+        if (!stepData) {
+            gameInterface.innerHTML = `<div class="result-box result-fail">
+                <h3>Missing Step</h3>
+                <p>${stepKey} not defined in this SOP.</p>
+            </div>`;
+            return;
+        }
+
+        recordStepVisit(stepKey, stepData, fromHistory, responseLabel);
+        if (!fromHistory) {
+            maybeTriggerCriticalCue(stepKey, stepData);
+        }
+        
+        // Update styling based on step type (question or result)
+        gameInterface.className = 'content-area fade-in';
+        stepTracker.innerText = `Step ID: ${stepKey.toUpperCase().replace(/_/g, " ")}`;
+
+        if (stepData.type === 'result') {
+            renderResult(stepData);
+        } else {
+            renderInteraction(stepData, stepKey);
+        }
+    }
+
+    function renderInteraction(data, key) {
+        let checklistHtml = '';
+        let isChecklistStep = false;
+
+        if (data.checklist && data.checklist.length > 0) {
+            isChecklistStep = true;
+            checklistHtml = '<div class="checklist-container" style="text-align: left; width: 100%; margin-bottom: 20px;">';
+            data.checklist.forEach((item, index) => {
+                checklistHtml += `
+                    <div class="checklist-item" style="margin-bottom: 10px; padding: 10px; background: #fff; border: 1px solid #ddd; border-radius: 5px;">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" class="step-checkbox" onchange="checkAllSelected()" style="width: 20px; height: 20px; margin-right: 10px;">
+                            <span>${item}</span>
+                        </label>
+                    </div>`;
+            });
+            checklistHtml += '</div>';
+        }
+
+        let optionsHtml = '';
+        data.actions.forEach(opt => {
+            let disabledAttr = isChecklistStep ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : '';
+            // Map generic styles (positive, negative, neutral) to CSS classes
+            let btnStyle = opt.style ? `btn-${opt.style}` : 'btn-neutral';
+            let btnClass = isChecklistStep ? 'checklist-next-btn ' + btnStyle : btnStyle;
+            const safeResponse = opt.label
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            optionsHtml += `<button data-response="${safeResponse}" onclick="handleAction('${opt.goto}', this.dataset.response)" class="${btnClass}" ${disabledAttr}>${opt.label}</button>`;
+        });
+
+        let noteHtml = data.note ? `<div class="ostad-note"><strong>ওস্তাদ বলছে:</strong> ${data.note}</div>` : '';
+
+        gameInterface.innerHTML = `
+            <div class="question-text">${data.content}</div>
+            ${noteHtml}
+            ${checklistHtml}
+            <div class="options-grid">
+                ${optionsHtml}
+            </div>
+        `;
+    }
+
+    function checkAllSelected() {
+        const checkboxes = document.querySelectorAll('.step-checkbox');
+        const nextBtns = document.querySelectorAll('.checklist-next-btn');
+        
+        let allChecked = true;
+        checkboxes.forEach(cb => {
+            if (!cb.checked) allChecked = false;
+        });
+
+        nextBtns.forEach(btn => {
+            if (allChecked) {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            } else {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+            }
+        });
+    }
+
+    function renderResult(data) {
+        const resultClass = data.status === 'success' ? 'result-success' : 'result-fail';
+        
+        gameInterface.innerHTML = `
+            <div class="result-box ${resultClass}">
+                <h2 style="margin-top:0">${data.title}</h2>
+                <p>${data.content}</p>
+            </div>
+            <button onclick="restartCurrentSop()" class="btn-restart">🔄 নতুন কল রিসিভ করো</button>
+        `;
+    }
+
+    function recordStepVisit(stepKey, stepData, fromHistory, responseLabel) {
+        if (fromHistory) {
+            updateMiniMap();
+            return;
+        }
+
+        if (stepHistory.length && stepHistory[stepHistory.length - 1].key === stepKey) {
+            updateMiniMap();
+            return;
+        }
+
+        const label = deriveStepLabel(stepKey, stepData);
+        const timestamp = new Date().toISOString();
+        stepHistory.push({ key: stepKey, label, response: responseLabel, timestamp });
+        const MAX_TRAIL = 8;
+        if (stepHistory.length > MAX_TRAIL) {
+            stepHistory = stepHistory.slice(stepHistory.length - MAX_TRAIL);
+        }
+        updateMiniMap();
+        pingTrailIndicator();
+    }
+
+    function deriveStepLabel(stepKey, stepData) {
+        if (stepData && stepData.title) return stepData.title;
+        if (stepData && stepData.content) {
+            const text = stepData.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+            if (text.length === 0) return stepKey.toUpperCase();
+            return text.length > 50 ? text.substring(0, 50) + '…' : text;
+        }
+        return stepKey.toUpperCase();
+    }
+
+    function formatTimestamp(isoString) {
+        if (!isoString) return '';
+        const date = new Date(isoString);
+        if (isNaN(date.getTime())) return '';
+        const datePart = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        const timePart = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+        return `${datePart} • ${timePart}`;
+    }
+
+    function updateMiniMap() {
+        if (!miniMapEl) return;
+        if (!stepHistory.length) {
+            miniMapEl.innerHTML = '<span class="mini-map-empty">Progress trail will appear here</span>';
+            return;
+        }
+
+        let html = '';
+        stepHistory.forEach((entry, index) => {
+            const isLast = index === stepHistory.length - 1;
+            const ordinal = index + 1;
+            const timestamp = entry.timestamp ? formatTimestamp(entry.timestamp) : '';
+            const responseLine = entry.response
+                ? `<div class="mini-map-response"><span class="mini-map-response-label">Selected</span><span>${entry.response}</span></div>`
+                : `<div class="mini-map-response mini-map-response-empty">Awaiting option</div>`;
+            const metaLine = timestamp ? `<div class="mini-map-meta">${timestamp}</div>` : '';
+            html += `<button class="mini-map-chip" ${isLast ? 'disabled' : `onclick="jumpToStep(${index})"`}>
+                <span class="mini-map-step">Step ${ordinal.toString().padStart(2, '0')}</span>
+                <span class="mini-map-label">${entry.label}</span>
+                ${responseLine}
+                ${metaLine}
+            </button>`;
+        });
+        miniMapEl.innerHTML = html;
+    }
+
+    function resetStepHistory() {
+        stepHistory = [];
+        updateMiniMap();
+        if (progressLauncher) {
+            progressLauncher.classList.remove('ping');
+        }
+    }
+
+    function jumpToStep(index) {
+        if (index < 0 || index >= stepHistory.length) return;
+        const target = stepHistory[index];
+        stepHistory = stepHistory.slice(0, index + 1);
+        renderStep(target.key, true, target.response || null);
+    }
+
+    function restartCurrentSop() {
+        if (!activeSop) return;
+        resetStepHistory();
+        lastAlertedStepKey = null;
+        renderStep(startNodeKey);
+    }
+
+    function handleAction(targetKey, responseLabel) {
+        renderStep(targetKey, false, responseLabel || null);
+    }
+
+    // Flowchart Logic
+    function showFlowchart() {
+        if (!activeSop || !Object.keys(steps).length) {
+            alert('Please load an SOP first.');
+            return;
+        }
+        updateFlowchartTitle();
+        const modal = document.getElementById('flowchartModal');
+        const graphDiv = document.getElementById('mermaid-graph');
+        modal.style.display = "block";
+        
+        const graphDefinition = generateMermaidGraph(steps);
+        
+        // Render mermaid
+        mermaid.render('mermaid-svg', graphDefinition).then(result => {
+            graphDiv.innerHTML = result.svg;
+        }).catch(err => {
+            console.error('Mermaid render failed:', err);
+            graphDiv.innerHTML = '<p>Flowchart rendering failed. Please try again.</p>';
+        });
+    }
+
+    function closeFlowchart() {
+        document.getElementById('flowchartModal').style.display = "none";
+    }
+
+    function generateMermaidGraph(stepsData) {
+        let graph = "graph TD\n";
+        
+        // Styles
+        graph += "classDef default fill:#fff,stroke:#333,stroke-width:1px;\n";
+        graph += "classDef success fill:#d4edda,stroke:#155724,stroke-width:2px;\n";
+        graph += "classDef fail fill:#f8d7da,stroke:#721c24,stroke-width:2px;\n";
+        graph += "classDef start fill:#e67e22,stroke:#d35400,color:white;\n";
+        graph += "classDef activeNode stroke:#e67e22,stroke-width:3px;\n";
+
+        let entries = Object.entries(stepsData);
+        // Ensure start node is first
+        const startEntryIndex = entries.findIndex(e => e[0] === startNodeKey);
+        if (startEntryIndex > -1) {
+            entries.unshift(entries.splice(startEntryIndex, 1)[0]);
+        }
+
+        const edgeStatements = [];
+
+        for (const [key, step] of entries) {
+            // Clean label
+            let rawLabel = (step.content || step.title || key).replace(/<[^>]*>/g, ' ');
+            let label = rawLabel.substring(0, 100);
+            if (rawLabel.length > 100) label += "...";
+            label = label.replace(/["\n]/g, '');
+
+            let shape = step.type === 'result' ? `(("${label}"))` : `["${label}"]`;
+            let className = step.type === 'result' ? (step.status === 'success' ? 'success' : 'fail') : 'default';
+            if (key === startNodeKey) className = 'start';
+
+            graph += `${key}${shape}:::${className}\n`;
+
+            if (step.actions) {
+                step.actions.forEach(action => {
+                    let edgeLabel = action.label.replace(/<[^>]*>/g, '').substring(0, 50).replace(/["\n]/g, '');
+                    edgeStatements.push({
+                        line: `${key} -->|"${edgeLabel}"| ${action.goto}`,
+                        from: key,
+                        to: action.goto
+                    });
+                });
+            }
+        }
+
+        edgeStatements.forEach(edge => {
+            graph += edge.line + "\n";
+        });
+
+        if (stepHistory.length) {
+            const visited = new Set(stepHistory.map(entry => entry.key));
+            visited.forEach(key => {
+                graph += `class ${key} activeNode;\n`;
+            });
+
+            const highlightedEdgeIdx = [];
+            for (let i = 1; i < stepHistory.length; i++) {
+                const prev = stepHistory[i - 1].key;
+                const curr = stepHistory[i].key;
+                const idx = edgeStatements.findIndex((edge, edgeIdx) => {
+                    if (highlightedEdgeIdx.includes(edgeIdx)) return false;
+                    return edge.from === prev && edge.to === curr;
+                });
+                if (idx > -1) {
+                    highlightedEdgeIdx.push(idx);
+                }
+            }
+
+            highlightedEdgeIdx.forEach(idx => {
+                graph += `linkStyle ${idx} stroke:#e67e22,stroke-width:3px;\n`;
+            });
+        }
+
+        return graph;
+    }
+
+    function downloadFlowchartPDF() {
+        if (!activeSop) {
+            alert('Please load an SOP first.');
+            return;
+        }
+        const graphElement = document.getElementById('mermaid-graph');
+        if (!graphElement || !graphElement.innerHTML.trim()) {
+            alert('Flowchart is still rendering. Please try again.');
+            return;
+        }
+
+        const svgNode = graphElement.querySelector('svg');
+        if (!svgNode) {
+            alert('Flowchart not ready yet. Please reopen once it appears.');
+            return;
+        }
+
+        const jsPDFLib = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF || null;
+        if (!jsPDFLib) {
+            alert('PDF library not loaded. Please refresh and try again.');
+            return;
+        }
+
+        setFlowchartProcessing(true, 'Rendering single-page PDF…');
+
+        try {
+            const viewBox = svgNode.viewBox && svgNode.viewBox.baseVal ? svgNode.viewBox.baseVal : null;
+            const svgWidth = viewBox && viewBox.width ? viewBox.width : svgNode.getBoundingClientRect().width;
+            const svgHeight = viewBox && viewBox.height ? viewBox.height : svgNode.getBoundingClientRect().height;
+            const serializer = new XMLSerializer();
+            const clonedSvg = svgNode.cloneNode(true);
+            clonedSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            clonedSvg.setAttribute('width', svgWidth);
+            clonedSvg.setAttribute('height', svgHeight);
+            const svgString = serializer.serializeToString(clonedSvg);
+            const svgDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+
+            img.onload = function() {
+                setFlowchartProcessing(true, 'Finalizing PDF download…');
+                const scaleFactor = 3;
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width * scaleFactor;
+                canvas.height = img.height * scaleFactor;
+                const ctx = canvas.getContext('2d');
+                ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
+                ctx.drawImage(img, 0, 0);
+
+                const imgData = canvas.toDataURL('image/png');
+                const pxToMm = 0.264583;
+                const contentWidthMm = canvas.width * pxToMm;
+                const contentHeightMm = canvas.height * pxToMm;
+                const margin = 25;
+                const minPageWidth = 210;
+                const minPageHeight = 297;
+                const pageWidth = Math.max(contentWidthMm + margin * 2, minPageWidth);
+                const pageHeight = Math.max(contentHeightMm + margin * 2, minPageHeight);
+                const orientation = pageWidth >= pageHeight ? 'landscape' : 'portrait';
+                const pdf = new jsPDFLib({
+                    orientation,
+                    unit: 'mm',
+                    format: [pageWidth, pageHeight]
+                });
+
+                const drawableWidth = pageWidth - margin * 2;
+                const drawableHeight = pageHeight - margin * 2;
+                const scaleToFit = Math.min(drawableWidth / contentWidthMm, drawableHeight / contentHeightMm, 1);
+                const drawnWidth = contentWidthMm * scaleToFit;
+                const drawnHeight = contentHeightMm * scaleToFit;
+                const offsetX = margin + (drawableWidth - drawnWidth) / 2;
+                const offsetY = margin + (drawableHeight - drawnHeight) / 2;
+
+                try {
+                    pdf.addImage(imgData, 'PNG', offsetX, offsetY, drawnWidth, drawnHeight);
+                    pdf.save(`${activeSop.id}_flowchart.pdf`);
+                } catch (error) {
+                    console.error('PDF save failed', error);
+                    alert('PDF download failed. Please try again.');
+                } finally {
+                    setFlowchartProcessing(false);
+                }
+            };
+
+            img.onerror = function(error) {
+                console.error('SVG render failed', error);
+                alert('Flowchart rendering failed. Please try again.');
+                setFlowchartProcessing(false);
+            };
+
+            img.src = svgDataUrl;
+        } catch (error) {
+            console.error('Flowchart PDF preparation failed', error);
+            alert('Flowchart PDF preparation failed. Please try again.');
+            setFlowchartProcessing(false);
+        }
+    }
+
+    function returnToHub() {
+        renderSopSelection();
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('flowchartModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Initialize
+    initApp();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "appTitle": "PTR Buchholz Alarm Response",
+    "appSubtitle": "অয়েল ট্রান্সফরমার ট্রিপ/অ্যালার্ম SOP",
+    "startNode": "start"
+  },
+  "steps": {
+    "start": {
+      "type": "interaction",
+      "content": "কন্ট্রোল রুমে Buchholz রিলে অ্যালার্ম বাজছে। কী ধরণের অ্যালার্ম?",
+      "note": "অ্যালার্ম প্যানেলে ইভেন্ট টাইম নোট করো এবং শিফট-ইন-চার্জকে কনফার্ম করাও।",
+      "actions": [
+        { "label": "শুধু অ্যালার্ম, ব্রেকার অন", "goto": "alarm_only_protocol", "style": "neutral" },
+        { "label": "অ্যালার্ম + ব্রেকার ট্রিপ", "goto": "trip_protocol", "style": "negative" }
+      ]
+    },
+    "alarm_only_protocol": {
+      "type": "interaction",
+      "content": "অ্যালার্ম হলেও ট্রান্সফরমার চলছে। অবিলম্বে নিচের কাজগুলো শেষ করো।",
+      "checklist": [
+        "এসসি ডি/আইডিএম/ট্যাঙ্ক প্রেসার অন্য কোনো ইন্ডিকেশন আছে কিনা নোট করেছি",
+        "লোড কারেন্ট, অয়েল/ওয়াইন্ডিং তাপমাত্রা নোট করেছি",
+        "বুচহলজ রিলে ভলিউম গেজ কজনের মত গ্যাস দেখাচ্ছে তা দেখেছি"
+      ],
+      "actions": [
+        { "label": "সব নোট নেওয়া হয়েছে", "goto": "field_verification", "style": "positive" }
+      ]
+    },
+    "trip_protocol": {
+      "type": "interaction",
+      "content": "Buchholz অ্যালার্মের সাথে ব্রেকার ট্রিপ করেছে। জরুরি পদক্ষেপ:",
+      "checklist": [
+        "সংশ্লিষ্ট PTR লোড অন্য ফিডারে ট্রান্সফার অনলাইন করা হয়েছে",
+        "আইসোলেশন: HV/LV ব্রেকার ও সাইড আর্থিং নিশ্চিত করেছি",
+        "ফায়ার/স্মোক নেই তা যাচাই করেছি"
+      ],
+      "actions": [
+        { "label": "আইসোলেশন সম্পন্ন", "goto": "gas_sampling", "style": "neutral" },
+        { "label": "পাশের যন্ত্রপাতিতেও অ্যালার্ম", "goto": "result_station_emergency", "style": "negative" }
+      ]
+    },
+    "field_verification": {
+      "type": "interaction",
+      "content": "ট্যাংক ও রিলে হাউজিং পরিদর্শন করো। কোনো দৃশ্যমান অস্বাভাবিকতা?",
+      "note": "বুশিং ফুটো, তেল লিক, রঙ কালো হওয়া বা অস্বাভাবিক শব্দ শুনো।",
+      "actions": [
+        { "label": "তেল লিক/স্মোক/গন্ধ আছে", "goto": "controlled_shutdown", "style": "negative" },
+        { "label": "কিছুই চোখে পড়েনি", "goto": "gas_sampling", "style": "positive" }
+      ]
+    },
+    "controlled_shutdown": {
+      "type": "interaction",
+      "content": "ঝুঁকি থাকায় PTR বন্ধ করতে হবে। নিচের ধাপগুলো অনুসরণ করো।",
+      "checklist": [
+        "লোড র‌্যাম্প-ডাউন/শিফট সম্পন্ন",
+        "HV ও LV ব্রেকার ট্রিপ করে আর্থিং স্যুইচ লাগালাম",
+        "কন্ট্রোল রুমে লিপিবদ্ধ ও অ্যালার্ম রিসেট"
+      ],
+      "actions": [
+        { "label": "আইসোলেট করেছি", "goto": "gas_sampling", "style": "neutral" }
+      ]
+    },
+    "gas_sampling": {
+      "type": "interaction",
+      "content": "Buchholz রিলের স্যাম্পলিং কক খুলে গ্যাস সংগ্রহ করো।",
+      "checklist": [
+        "স্যাম্পলিং বোতল/টেস্ট টিউব পানি দিয়ে ভরেছি",
+        "পেটকক ধীরে খুলে গ্যাস বেলচিং বন্ধ হওয়া পর্যন্ত সংগ্রহ করেছি",
+        "কক বন্ধ করে ভেন্ট প্লাগ পরিষ্কার করেছি",
+        "গ্যাসের গন্ধ/রঙ নোট করেছি"
+      ],
+      "actions": [
+        { "label": "গ্যাস সংগ্রহ সম্পন্ন", "goto": "gas_assessment", "style": "positive" }
+      ]
+    },
+    "gas_assessment": {
+      "type": "interaction",
+      "content": "গ্যাস টেস্ট ফল কী দেখাচ্ছে?",
+      "note": "ম্যাচ টেস্টে যদি গ্যাস জ্বলে ওঠে = দাহ্য, না হলে অ-দাহ্য।",
+      "actions": [
+        { "label": "দাহ্য/জ্বলে ওঠে", "goto": "result_major_fault", "style": "negative" },
+        { "label": "দাহ্য নয়, স্বল্প গন্ধ", "goto": "oil_level_check", "style": "neutral" }
+      ]
+    },
+    "oil_level_check": {
+      "type": "interaction",
+      "content": "কনজারভেটর অয়েল লেভেল ও সিলিকা জেল স্টেট দেখো।",
+      "actions": [
+        { "label": "অয়েল লেভেল নরমাল", "goto": "reset_decision", "style": "positive" },
+        { "label": "অয়েল লেভেল কম / সিলিকা জেল গোলাপি", "goto": "result_oil_issue", "style": "negative" }
+      ]
+    },
+    "reset_decision": {
+      "type": "interaction",
+      "content": "সব ফল্ট সাইন অনুপস্থিত। রিসেট করে পর্যবেক্ষণ করবে?",
+      "note": "মিনিমাম ৩০ মিনিট স্ট্যান্ডবাই রাখা ও ক্রমাগত DGA পর্যবেক্ষণ নির্দেশ দাও।",
+      "actions": [
+        { "label": "হ্যাঁ, অ্যালার্ম রিসেট করে পর্যবেক্ষণ", "goto": "result_continue_service", "style": "positive" },
+        { "label": "না, অতিরিক্ত পরীক্ষা লাগবে", "goto": "result_lab_test", "style": "neutral" }
+      ]
+    },
+    "result_station_emergency": {
+      "type": "result",
+      "status": "fail",
+      "title": "⚠️ বহুগুণ ফল্ট - স্টেশন এমার্জেন্সি",
+      "content": "একাধিক যন্ত্রে সিমালটেনিয়াস অ্যালার্ম। সম্পূর্ণ উপকেন্দ্র আইসোলেট করে ফায়ার টিম ডাকো।"
+    },
+    "result_major_fault": {
+      "type": "result",
+      "status": "fail",
+      "title": "❌ Buchholz গ্যাস দাহ্য",
+      "content": "ভেতরে ইন্টার্নাল আর্কিং বা শর্ট। PTR সার্ভিসে দেওয়া যাবে না। স্টোর রিপ্লেসমেন্ট বা ওয়ার্কশপে পাঠাও।"
+    },
+    "result_oil_issue": {
+      "type": "result",
+      "status": "fail",
+      "title": "🛢️ অয়েল লেভেল/শ্বাস-প্রশ্বাস সমস্যা",
+      "content": "অয়েল টপ-আপ, সিলিকা-জেল রিপ্লেস ও লিক খুঁজে সারিয়ে তারপর পুনরায় টেস্ট করো।"
+    },
+    "result_lab_test": {
+      "type": "result",
+      "status": "fail",
+      "title": "🔍 গ্যাস অ্যানালাইসিস লাগবে",
+      "content": "স্যাম্পল ল্যাবে পাঠিয়ে DGA রিপোর্ট না পাওয়া পর্যন্ত ট্রান্সফরমার স্ট্যান্ডবাই রাখো।"
+    },
+    "result_continue_service": {
+      "type": "result",
+      "status": "success",
+      "title": "✅ সার্ভিসে চলবে কিন্তু পর্যবেক্ষণে",
+      "content": "অ্যালার্ম রিসেট সফল। ২৪ ঘন্টা লোড/অয়েল প্যারামিটার দরকারি লগ নাও ও কন্ট্রোল রুমে রিপোর্ট করো।"
+    }
+  }
+}

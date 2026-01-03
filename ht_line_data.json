@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "appTitle": "11kV Line Restoration SOP",
+    "appSubtitle": "ফিডার ব্রেকডাউন গাইড",
+    "startNode": "start"
+  },
+  "steps": {
+    "start": {
+      "type": "interaction",
+      "content": "কন্ট্রোল রুম জানালো: 11kV ফিডার ট্রিপ। PPE পরে রওনা দিয়েছ তো?",
+      "note": "হেলমেট, আর্ক গ্লাভস, ভোল্টেজ টেস্টার, ডিসচার্জ রড সাথে নাও।",
+      "checklist": [
+        "হেলমেট, ফেস শিল্ড, আর্ক গ্লাভস",
+        "স্টিল-টু বুট ও ফ্যাল-অ্যারেস্টার",
+        "আইসোলেশন পারমিট কপি সাথে আছে"
+      ],
+      "actions": [
+        { "label": "সব রেডি", "goto": "permit_confirm", "style": "positive" },
+        { "label": "পারমিট পাইনি", "goto": "result_wait_permit", "style": "negative" }
+      ]
+    },
+    "permit_confirm": {
+      "type": "interaction",
+      "content": "পারমিট টু ওয়ার্ক (PTW) ও লাইন আইসোলেশন নিশ্চিত করেছ?",
+      "checklist": [
+        "আউটগোয়িং GO/AB সুইচ ডাউন",
+        "আর্থিং চেন লাগানো",
+        "কন্ট্রোল রুমকে প্যাট্রোল শুরুর কনফার্মেশন পাঠানো"
+      ],
+      "actions": [
+        { "label": "হ্যাঁ, এগোই", "goto": "patrol_section", "style": "positive" }
+      ]
+    },
+    "patrol_section": {
+      "type": "interaction",
+      "content": "প্যাট্রোল করে কী দেখতে পেলে?",
+      "actions": [
+        { "label": "গাছ/ডাল কন্ডাক্টরে", "goto": "tree_contact", "style": "neutral" },
+        { "label": "জাম্পার/DO বার্ন", "goto": "jumper_issue", "style": "neutral" },
+        { "label": "কিছুই চোখে পড়েনি", "goto": "insulation_test", "style": "neutral" }
+      ]
+    },
+    "tree_contact": {
+      "type": "interaction",
+      "content": "ডাল বা গাছ কন্ডাক্টর ছুঁয়েছে। কাটা ও ক্লিয়ারেন্স নিতে হবে।",
+      "note": "ট্যাগলাইন বেঁধে কন্ডাক্টর দুলে গেলে ধরে থাকো, পরে ডাল কাটো।",
+      "actions": [
+        { "label": "কাটলাম, কন্ডাক্টর ঠিক", "goto": "charging_clearance", "style": "positive" }
+      ]
+    },
+    "jumper_issue": {
+      "type": "interaction",
+      "content": "জাম্পার বা DO ব্যারেল বার্ন। রিজন খুঁজে রিফিট করো।",
+      "note": "কার্বনাইজড লুগ কাটো, নতুন কপার জাম্পার এবং আরক হর্ন ফিট করো।",
+      "actions": [
+        { "label": "রিপেয়ার শেষ", "goto": "charging_clearance", "style": "positive" }
+      ]
+    },
+    "insulation_test": {
+      "type": "interaction",
+      "content": "ডাউন লাইনে IR/ক্যাপাসিট্যান্স চেক করো। রিডিং কেমন?",
+      "note": "5kV মেগার দিয়ে ফেজ-টু-আর্থ টেস্ট করো, বা ফেজ কারেন্ট ক্ল্যাম্পে লিকেজ দেখো।",
+      "actions": [
+        { "label": "IR 1 GΩ এর নিচে", "goto": "result_cable_fault", "style": "negative" },
+        { "label": "IR ভালো", "goto": "sectionalize", "style": "positive" }
+      ]
+    },
+    "sectionalize": {
+      "type": "interaction",
+      "content": "ফিডারকে সেকশনালাইজ করো। গো-সুইচ বা এয়ার ব্রেক দিয়ে অংশ ভাগ করো।",
+      "note": "প্রতিটি সেকশন আর্থ করে টেস্ট, সন্দেহজনক অংশে লোক মোতায়েন করো।",
+      "actions": [
+        { "label": "ফল্ট সেকশন ধরা পড়েছে", "goto": "repair_hidden", "style": "positive" },
+        { "label": "লাইন সাইডে কিছুই নেই", "goto": "result_substation_issue", "style": "negative" }
+      ]
+    },
+    "repair_hidden": {
+      "type": "interaction",
+      "content": "সেকশনে কোন ডিভাইস ত্রুটি?",
+      "actions": [
+        { "label": "LA বার্ন বা ফেটে গেছে", "goto": "la_replacement", "style": "neutral" },
+        { "label": "পিন/ডিস্ক ইনসুলেটর ট্র্যাক", "goto": "insulator_clean", "style": "neutral" },
+        { "label": "অন্যান্য ছোট ফল্ট সারিয়েছি", "goto": "charging_clearance", "style": "positive" }
+      ]
+    },
+    "la_replacement": {
+      "type": "interaction",
+      "content": "ফল্টি লাইটনিং অ্যারেস্টর বদলাও।",
+      "note": "নতুন LA বসিয়ে মাটি সংযোগ শক্ত করো, নাম্বার প্লেট নোট করো।",
+      "actions": [
+        { "label": "রিপ্লেস করলাম", "goto": "charging_clearance", "style": "positive" }
+      ]
+    },
+    "insulator_clean": {
+      "type": "interaction",
+      "content": "ইনসুলেটর ক্লিন/রিপ্লেস করো।",
+      "note": "হটস্পট থাকলে পুরো সেট বদলাও, আরক-হর্ন গ্যাপ রিসেট করো।",
+      "actions": [
+        { "label": "লিকেজ বন্ধ", "goto": "charging_clearance", "style": "positive" }
+      ]
+    },
+    "charging_clearance": {
+      "type": "interaction",
+      "content": "চার্জিংয়ের আগে শেষ চেকলিস্ট।",
+      "note": "কর্মীদের নিরাপদ দূরত্বে সরিয়ে নাও।",
+      "checklist": [
+        "সব আর্থিং চেন খুলেছি",
+        "জাম্পার/GO/DO টাইট",
+        "কন্ট্রোল রুমে ক্লিয়ারেন্স পাঠিয়েছি",
+        "ব্যানার ও সাইনবোর্ড সরানো হয়েছে"
+      ],
+      "actions": [
+        { "label": "চার্জ দাও", "goto": "result_success_ht_line", "style": "positive" }
+      ]
+    },
+    "result_wait_permit": {
+      "type": "result",
+      "status": "fail",
+      "title": "⏳ PTW জোগাড় না হলে কাজ নয়",
+      "content": "পারমিট ছাড়া HT লাইনে কাজ করো না। ফিডার চার্জ থাকলে দুর্ঘটনা নিশ্চিত।"
+    },
+    "result_cable_fault": {
+      "type": "result",
+      "status": "fail",
+      "title": "❌ কেবল/আন্ডারগ্রাউন্ড ফল্ট",
+      "content": "IR ভ্যালু লিকেজ দেখাচ্ছে। কেবল ফাইন্ডার বা হাই-পট ব্যবহার করে নির্দিষ্ট পয়েন্ট ট্রেস করো।"
+    },
+    "result_substation_issue": {
+      "type": "result",
+      "status": "fail",
+      "title": "⚠️ সাবস্টেশনের দিকে সমস্যা",
+      "content": "লাইন ক্লিয়ার, কিন্তু কন্ট্রোল রুমে ফল্ট টিকে আছে। ব্রেকার, বুশিং বা বাস সেকশনের আইসোলেশন চাই।"
+    },
+    "result_success_ht_line": {
+      "type": "result",
+      "status": "success",
+      "title": "✅ ফিডার নরমালাইজ",
+      "content": "চার্জিং সফল। কন্ট্রোল রুম লগবুকে সময় লিখে প্যাট্রোল টিমকে রিলিজ দাও।"
+    }
+  }
+}

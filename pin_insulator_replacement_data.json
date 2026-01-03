@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "appTitle": "11kV Pin Insulator Replacement SOP",
+    "appSubtitle": "প্যাট্রোলিংয়ে ত্রুটি ধরা পড়লে",
+    "startNode": "start"
+  },
+  "steps": {
+    "start": {
+      "type": "interaction",
+      "content": "প্যাট্রোলিংয়ে 11kV পিন ইনসুলেটর চিপ/ট্র্যাক করতে দেখা গেছে। প্রথমে কি নিশ্চিত করবে?",
+      "checklist": [
+        "ফিডার নাম, পোল নম্বর, স্ট্রাকচার টাইপ নোট",
+        "ছবি/ভিডিও প্রমাণ",
+        "শিফট ইনচার্জকে মৌখিক রিপোর্ট"
+      ],
+      "actions": [
+        { "label": "ডেটা রেকর্ড করলাম", "goto": "ptw_isolation", "style": "positive" }
+      ]
+    },
+    "ptw_isolation": {
+      "type": "interaction",
+      "content": "লাইন মেরামতের আগে PTW ও আইসোলেশন করো।",
+      "checklist": [
+        "আউটগোয়িং ব্রেকার ট্রিপ/GO সুইচ ওপেন",
+        "আর্থিং চেন বসানো",
+        "লাইভ লাইন টেস্ট করে সম্পূর্ণ ডিঅ্যার্জ নিশ্চিত"
+      ],
+      "actions": [
+        { "label": "আইসোলেশন প্রস্তুত", "goto": "climb_prep", "style": "positive" },
+        { "label": "PTW মেলেনি", "goto": "result_no_ptw", "style": "negative" }
+      ]
+    },
+    "climb_prep": {
+      "type": "interaction",
+      "content": "পোলে ওঠার আগে PPE ও টুল কিট আবার চেক করো।",
+      "checklist": [
+        "সেফটি বেল্ট, ফল অ্যারেস্টার",
+        "স্প্যানার সেট, পিন স্প্যানার, স্টিল ব্রাশ",
+        "নতুন পিন ইনসুলেটর, GI পিন, কটি পিন"
+      ],
+      "actions": [
+        { "label": "সব রেডি", "goto": "remove_conductor", "style": "positive" }
+      ]
+    },
+    "remove_conductor": {
+      "type": "interaction",
+      "content": "কন্ডাক্টরকে নিরাপদে লুজ করো।",
+      "note": "টাই-টপ খুলে ড্রপ ক্ল্যাম্পে টেম্পরারি সাপোর্ট দাও যাতে কন্ডাক্টর মাটিতে না পড়ে।",
+      "actions": [
+        { "label": "কন্ডাক্টর নিরাপদ", "goto": "remove_old_insulator", "style": "neutral" }
+      ]
+    },
+    "remove_old_insulator": {
+      "type": "interaction",
+      "content": "পুরনো ইনসুলেটর ও GI পিন খুলো।",
+      "note": "স্টে রডে মরিচা থাকলে স্টিল ব্রাশ দিয়ে পরিষ্কার করো।",
+      "actions": [
+        { "label": "পুরনো অংশ খুলেছি", "goto": "install_new_insulator", "style": "positive" }
+      ]
+    },
+    "install_new_insulator": {
+      "type": "interaction",
+      "content": "নতুন ইনসুলেটর বসাও।",
+      "checklist": [
+        "GI পিনে এন্টি-করোজিভ পেস্ট",
+        "ইনসুলেটর টর্কডাউন",
+        "টাই-টপ বা এআরটি গ্যাপ ঠিক"
+      ],
+      "actions": [
+        { "label": "বসানো শেষ", "goto": "restring_conductor", "style": "positive" }
+      ]
+    },
+    "restring_conductor": {
+      "type": "interaction",
+      "content": "কন্ডাক্টর পুনরায় বসাও।",
+      "note": "টাই-টপ টাইট করে কন্ডাক্টরকে সেন্টার করা ও আরক হর্ন ডিস্টেন্স রিসেট করো।",
+      "actions": [
+        { "label": "কন্ডাক্টর ঠিক", "goto": "post_checks", "style": "positive" }
+      ]
+    },
+    "post_checks": {
+      "type": "interaction",
+      "content": "স্ট্রাকচার ও লাইভ হওয়ার আগে চেকলিস্ট",
+      "checklist": [
+        "সব টুল নিচে নামানো",
+        "পোল টপ ছবি নেওয়া",
+        "নিউট্রাল-আর্থ কানেকশন ঠিক",
+        "PTW ক্লোজের অনুরোধ পাঠানো"
+      ],
+      "actions": [
+        { "label": "সব ক্লিয়ার", "goto": "charging_sequence", "style": "positive" }
+      ]
+    },
+    "charging_sequence": {
+      "type": "interaction",
+      "content": "চার্জিং সিকোয়েন্স",
+      "checklist": [
+        "আর্থিং চেন খুলে ফেলা",
+        "GO/DO রিস্টোর",
+        "কন্ট্রোল রুমে চার্জের রিপোর্ট",
+        "১০ মিনিট লোড পর্যবেক্ষণ"
+      ],
+      "actions": [
+        { "label": "সফলভাবে চার্জ", "goto": "result_success", "style": "positive" }
+      ]
+    },
+    "result_no_ptw": {
+      "type": "result",
+      "status": "fail",
+      "title": "⛔ PTW ছাড়া কাজ নয়",
+      "content": "পারমিট না থাকলে HT লাইনে হস্তক্ষেপ করা যাবে না। লিখিত পারমিট না পেলে কাজ বন্ধ রাখো।"
+    },
+    "result_success": {
+      "type": "result",
+      "status": "success",
+      "title": "✅ ইনসুলেটর বদল সম্পন্ন",
+      "content": "চার্জিং নরমাল। লগবুকে পোল নম্বর, সময় ও ছবি আপলোড করো।"
+    }
+  }
+}

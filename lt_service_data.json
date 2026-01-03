@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "appTitle": "LT Feeder & Service Fault SOP",
+    "appSubtitle": "পিলার টু কনজিউমার গাইড",
+    "startNode": "start"
+  },
+  "steps": {
+    "start": {
+      "type": "interaction",
+      "content": "লো-টেনশন নো-সাপ্লাই কল রিসিভ। সাইটে যাওয়ার আগে প্রস্তুতি নাও।",
+      "note": "কমপ্লেইন্ট রেজিস্টারে ভোক্তার নাম্বার ও লোকেশন লিখে নাও।",
+      "checklist": [
+        "PPE (হেলমেট, গ্লাভস, ইনসুলেটেড ম্যাট)",
+        "LT কাজের টুল (রেঞ্চ, নট রেঞ্চ, মেগার)",
+        "সার্ভিস তার, ফিউজ লিংক, লুগ"
+      ],
+      "actions": [
+        { "label": "রওনা দিলাম", "goto": "pillar_identification", "style": "positive" }
+      ]
+    },
+    "pillar_identification": {
+      "type": "interaction",
+      "content": "নিকটবর্তী পিলার বক্স/ডিস্ট্রিবিউশন পয়েন্ট খুলে ইনকামিং মাপো।",
+      "note": "প্রতি ফেজে 230V ও নিউট্রালে জিরো নিশ্চিত করো।",
+      "actions": [
+        { "label": "Main MCCB ট্রিপড", "goto": "pillar_trip_reason", "style": "negative" },
+        { "label": "ইনকামিং ভোল্টেজই নাই", "goto": "result_escalate_dtr", "style": "negative" },
+        { "label": "পিলার হেলদি", "goto": "walk_the_line", "style": "neutral" }
+      ]
+    },
+    "pillar_trip_reason": {
+      "type": "interaction",
+      "content": "কেন MCCB ট্রিপ করল?",
+      "actions": [
+        { "label": "লুজ/বার্ন্ট লুগ", "goto": "lug_repair", "style": "neutral" },
+        { "label": "আউটগোয়িং কেবল শর্ট", "goto": "repair_ug_joint", "style": "negative" },
+        { "label": "বক্সে পানি/আর্দ্রতা", "goto": "drying_process", "style": "neutral" }
+      ]
+    },
+    "lug_repair": {
+      "type": "interaction",
+      "content": "সব ফেজ লুগ খুলে স্ক্র্যাপ করে নতুন লুগ প্রেস করো।",
+      "note": "টর্ক রেঞ্চ ব্যবহার করে প্রস্তুতকারক মানে টাইট করো।",
+      "actions": [
+        { "label": "লুগ ঠিক আছে", "goto": "insulation_test_lt", "style": "positive" }
+      ]
+    },
+    "repair_ug_joint": {
+      "type": "interaction",
+      "content": "সন্দেহজনক আউটগোয়িং কেবল সনাক্ত করে IR টেস্ট করো।",
+      "note": "মার্কার দিয়ে ফল্টেড কেবল আলাদা করে টেম্পরারি জাম্পার দাও।",
+      "actions": [
+        { "label": "জয়েন্ট রিপেয়ার/বাইপাস", "goto": "insulation_test_lt", "style": "neutral" },
+        { "label": "কেবল কেটে ফেলা লাগবে", "goto": "result_cable_replace", "style": "negative" }
+      ]
+    },
+    "drying_process": {
+      "type": "interaction",
+      "content": "বক্স শুকিয়ে ওয়াটার-প্রুফিং করো।",
+      "note": "হট এয়ার গান/কাপড় দিয়ে শুকিয়ে সিলিকা-জেল রেখে ঢাকনা লাগাও।",
+      "actions": [
+        { "label": "বক্স শুকনো", "goto": "insulation_test_lt", "style": "positive" }
+      ]
+    },
+    "insulation_test_lt": {
+      "type": "interaction",
+      "content": "আউটগোয়িং সার্কিটের IR 500V মেগার দিয়ে টেস্ট করো। ফলাফল?",
+      "actions": [
+        { "label": "IR পাশ", "goto": "final_reenergize", "style": "positive" },
+        { "label": "IR ফেল", "goto": "result_cable_replace", "style": "negative" }
+      ]
+    },
+    "walk_the_line": {
+      "type": "interaction",
+      "content": "পিলার থেকে গ্রাহক পর্যন্ত কন্ডাক্টর/সার্ভিস প্যাট্রোল করো।",
+      "note": "সানলাইটে হেয়ারলাইন ব্রেক দেখা যায় না, হাত দিয়ে স্পর্শ করো না।",
+      "actions": [
+        { "label": "সার্ভিস তার ছিঁড়ে গেছে", "goto": "replace_service", "style": "neutral" },
+        { "label": "নিউট্রাল খোলা", "goto": "neutral_fix", "style": "neutral" },
+        { "label": "বাইরে কিছুই নেই", "goto": "result_house_wiring", "style": "negative" }
+      ]
+    },
+    "replace_service": {
+      "type": "interaction",
+      "content": "ডাবল অ্যালুমিনিয়াম সার্ভিস তারে সঠিক সেকশন বসাও।",
+      "note": "মিটার টার্মিনালে প্রেস লুগ ও ইনসুলেটেড টেপ ব্যবহার করো।",
+      "actions": [
+        { "label": "নতুন তার বসানো", "goto": "final_reenergize", "style": "positive" }
+      ]
+    },
+    "neutral_fix": {
+      "type": "interaction",
+      "content": "নিউট্রাল বাস বার ও আর্থ ইলেকট্রোড টাইট করো।",
+      "note": "ভোল্টেজ ড্রপ মাপো, ফ্লোটিং নিউট্রাল থাকলে এক্সট্রা আর্থ রড যোগ করো।",
+      "actions": [
+        { "label": "নিউট্রাল OK", "goto": "final_reenergize", "style": "positive" }
+      ]
+    },
+    "final_reenergize": {
+      "type": "interaction",
+      "content": "চার্জ দেওয়ার আগে শেষ ধাপ চেক করো।",
+      "checklist": [
+        "সব কভার/ডোর লাগানো",
+        "লোড ব্যাল্যান্স (প্রতি ফেজ < 80% rated)",
+        "কনজিউমারকে সতর্ক করে সুইচ-অন",
+        "লগবুকে ভোল্টেজ ও কারেন্ট নোট"
+      ],
+      "actions": [
+        { "label": "লাইন চালু", "goto": "result_success_lt", "style": "positive" }
+      ]
+    },
+    "result_escalate_dtr": {
+      "type": "result",
+      "status": "fail",
+      "title": "⚡ উপরের দিকের সাপ্লাই নাই",
+      "content": "পিলারে ইনকামিং ভোল্টেজ নেই মানে DTR বা HT পাশে সমস্যা। কন্ট্রোল রুমে এস্কেলেট করো।"
+    },
+    "result_cable_replace": {
+      "type": "result",
+      "status": "fail",
+      "title": "🛠️ আউটগোয়িং কেবল বদলানো লাগবে",
+      "content": "IR ফেল করেছে। ডিফেক্টিভ কেবল/জয়েন্ট রিপ্লেসমেন্টের জন্য ওয়ার্ক অর্ডার তৈরি করো।"
+    },
+    "result_house_wiring": {
+      "type": "result",
+      "status": "fail",
+      "title": "🏠 গ্রাহকের ধারে ত্রুটি",
+      "content": "ডিস্ট্রিবিউশন সাইড ঠিক। ভোক্তাকে প্রাইভেট ইলেকট্রিশিয়ান দিয়ে অভ্যন্তরীণ সার্কিট পরীক্ষা করার পরামর্শ দাও।"
+    },
+    "result_success_lt": {
+      "type": "result",
+      "status": "success",
+      "title": "✅ লো-টেনশন নরমাল",
+      "content": "গ্রাহকের লাইট জ্বলেছে। কন্টাক্ট নম্বর আপডেট ও কাজের ছবি অ্যাপসে আপলোড করো।"
+    }
+  }
+}

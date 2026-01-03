@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "appTitle": "Domestic New Meter Installation SOP",
+    "appSubtitle": "নতুন গৃহস্থ ইন্টারকানেকশন গাইড",
+    "startNode": "start"
+  },
+  "steps": {
+    "start": {
+      "type": "interaction",
+      "content": "নতুন গৃহস্থ কনজিউমারের মিটার ইনস্টলেশন। ওয়ার্ক-অর্ডার নং ও KYC যাচাই করেছ?",
+      "checklist": [
+        "অনলাইনে অনুমোদিত আবেদন ও পেমেন্ট রসিদ দেখেছি",
+        "নতুন সংযোগ নম্বর/CA নম্বর লিখে নিয়েছি",
+        "ফটো আইডি, ঠিকানা প্রুফ ও গ্রাহকের উপস্থিতি নিশ্চিত",
+        "PPE (হেলমেট, গ্লাভস, আয়রন-লেস বুট) পরে আছি"
+      ],
+      "actions": [
+        { "label": "সব ঠিক, সাইটে ঢুকি", "goto": "site_precheck", "style": "positive" }
+      ]
+    },
+    "site_precheck": {
+      "type": "interaction",
+      "content": "প্রাইভেট ইনস্টলেশন এরিয়া (সার্ভিস রুম/ফ্যাসাড) পরিদর্শন করো।",
+      "note": "মিটার বোর্ডের উচ্চতা 1.5 মিটার ±100 মিমি, আর্দ্রতা/রাসায়নিক দূষণ যেন না থাকে।",
+      "actions": [
+        { "label": "বোর্ড ও বক্স প্রস্তুত", "goto": "service_line_check", "style": "positive" },
+        { "label": "বক্স/বোর্ড নেই বা অনুপযুক্ত", "goto": "result_consumer_rectify", "style": "negative" }
+      ]
+    },
+    "service_line_check": {
+      "type": "interaction",
+      "content": "সাপ্লাই সোর্স যাচাই: পিলার/পোল থেকে সার্ভিস ড্রপ ঠিক আছে?",
+      "actions": [
+        { "label": "বিদ্যমান সার্ভিস তার ঠিক আছে", "goto": "earthing_check", "style": "positive" },
+        { "label": "সার্ভিস তার বদলানো দরকার", "goto": "service_replacement", "style": "neutral" }
+      ]
+    },
+    "service_replacement": {
+      "type": "interaction",
+      "content": "ডাবল ইনসুলেটেড অ্যারিয়াল বাঞ্চড কেবল (ABC) বা সার্ভিস ড্রপ স্থাপন করো।",
+      "note": "কেবল সাইজ 2C x 16 sqmm (≤5 kW) বিধি অনুসারে নাও।",
+      "actions": [
+        { "label": "নতুন সার্ভিস জুড়েছি", "goto": "earthing_check", "style": "positive" }
+      ]
+    },
+    "earthing_check": {
+      "type": "interaction",
+      "content": "কনজিউমার আর্থিং ও নিউট্রাল বন্ডিং টেস্ট করো।",
+      "actions": [
+        { "label": "আর্থ রেজিস্ট্যান্স ≤ 5Ω", "goto": "meter_material", "style": "positive" },
+        { "label": "আর্থিং অনুপস্থিত বা বেশি রেজিস্ট্যান্স", "goto": "result_earthing_pending", "style": "negative" }
+      ]
+    },
+    "meter_material": {
+      "type": "interaction",
+      "content": "মিটার ও অ্যাক্সেসরির তালিকা নিশ্চিত করো।",
+      "checklist": [
+        "BIS সার্টিফায়েড সিঙ্গেল-ফেজ স্মার্ট/স্ট্যাটিক মিটার",
+        "ইনকামিং DP, 32A MCB, ভোল্টেজ ট্যাগ",
+        "সিলিং কিট, ট্যাম্পার এভিডেন্ট সিল, বারকোড লেবেল",
+        "ফর্ম 6 ইনস্টলেশন রিপোর্ট ব্ল্যাঙ্ক কপি"
+      ],
+      "actions": [
+        { "label": "সব উপকরণ রেডি", "goto": "mounting_phase", "style": "positive" }
+      ]
+    },
+    "mounting_phase": {
+      "type": "interaction",
+      "content": "মিটার বক্স/বোর্ডে স্থাপন করো।",
+      "note": "প্লাম্ব লেভেল ধরে চারটি স্ক্রু দিয়ে ফিক্স করো, তারগুলো নিচের দিক দিয়ে ঢোকাও।",
+      "checklist": [
+        "ইনকামিং ফেজ বামদিকে, নিউট্রাল ডানদিকে",
+        "আউটগোয়িং কন্ডাক্টর Ferrule ট্যাগসহ",
+        "MCB→মিটার→লোড ক্রম বজায়"
+      ],
+      "actions": [
+        { "label": "মাউন্টিং সম্পন্ন", "goto": "connection_torque", "style": "positive" }
+      ]
+    },
+    "connection_torque": {
+      "type": "interaction",
+      "content": "টার্মিনাল টর্কিং মান (2.5-3 Nm) অনুসারে বেঁধে দাও।",
+      "actions": [
+        { "label": "টার্মিনাল সিরিয়াল ঠিক", "goto": "functional_tests", "style": "positive" }
+      ]
+    },
+    "functional_tests": {
+      "type": "interaction",
+      "content": "পাওয়ার অন করে ফাংশনাল টেস্ট করো।",
+      "checklist": [
+        "পোলারিটি টেস্ট (ফেজ-নিউট্রাল 230V ±10%)",
+        "লোড টেস্ট: 10A লোডে পালস এলইডি টিক-টিক করছে",
+        "নিউট্রাল-আর্থ ভোল্টেজ < 2V",
+        "CT/PT ত্রুটি নেই (স্মার্ট মিটার হলে LED + Display OK)"
+      ],
+      "actions": [
+        { "label": "সব পাস", "goto": "sealing_docs", "style": "positive" },
+        { "label": "অস্বাভাবিক পাঠ দেখছি", "goto": "result_functional_fail", "style": "negative" }
+      ]
+    },
+    "sealing_docs": {
+      "type": "interaction",
+      "content": "সিলিং ও ডকুমেন্টেশন সম্পন্ন করো।",
+      "checklist": [
+        "টার্মিনাল কভার সিল, মিটার বক্স ডোর সিল",
+        "বারকোড স্ক্যান করে HHD/মোবাইল অ্যাপে ইনস্টলেশন লগ",
+        "ভোক্তার স্বাক্ষরসহ কাজ সম্পন্ন সার্টিফিকেট",
+        "প্রারম্ভিক রিডিং (kWh/kVAh) নোট"
+      ],
+      "actions": [
+        { "label": "সব নথি আপলোড", "goto": "result_install_success", "style": "positive" }
+      ]
+    },
+    "result_consumer_rectify": {
+      "type": "result",
+      "status": "fail",
+      "title": "🏠 মিটার বক্স/স্পেস অনুপযুক্ত",
+      "content": "বিধি অনুযায়ী মিটার বোর্ড প্রস্তুত করতে গ্রাহককে পরামর্শ দাও। Ready হলে পুনরায় ইনস্টলেশন শিডিউল করো।"
+    },
+    "result_earthing_pending": {
+      "type": "result",
+      "status": "fail",
+      "title": "⚡ আর্থিং অনুপস্থিত",
+      "content": "বিধিসম্মত আর্থিং ছাড়া সংযোগ দেওয়া যাবে না। আর্থ পিট মাপার রিপোর্ট জমা না হওয়া পর্যন্ত কাজ Pending রাখো।"
+    },
+    "result_functional_fail": {
+      "type": "result",
+      "status": "fail",
+      "title": "❌ মিটার ফাংশন টেস্ট ফেল",
+      "content": "মিটার বা সার্কিটে ত্রুটি। স্টক থেকে নতুন মিটার নিয়ে পুনরায় ইনস্টল অথবা ডিটেইল টেস্ট রিপোর্ট তৈরি করো।"
+    },
+    "result_install_success": {
+      "type": "result",
+      "status": "success",
+      "title": "✅ নতুন সংযোগ লাইভ",
+      "content": "মিটার কমিশন সম্পন্ন। অ্যাপে স্টেটাস 'Charged' আপডেট এবং গ্রাহককে সেভিং টিপস বুঝিয়ে দাও।"
+    }
+  }
+}

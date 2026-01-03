@@ -1,0 +1,157 @@
+{
+  "meta": {
+    "appTitle": "DTR Preventive Maintenance SOP",
+    "appSubtitle": "সূচিবদ্ধ সার্ভিস চেকলিস্ট",
+    "startNode": "start"
+  },
+  "steps": {
+    "start": {
+      "type": "interaction",
+      "content": "সূচি অনুযায়ী DTR মেইনটেনেন্স। আগেই লোড ট্রান্সফার ও নোটিফাই করো।",
+      "checklist": [
+        "কনজিউমার নোটিশ/এসএমএস পাঠানো",
+        "ফিডার লোড শিফট প্ল্যান",
+        "জব কার্ড ও PTA সাইন"
+      ],
+      "actions": [
+        { "label": "সাইটে যাই", "goto": "pre_isolation", "style": "positive" }
+      ]
+    },
+    "pre_isolation": {
+      "type": "interaction",
+      "content": "আইসোলেশন প্রক্রিয়া সম্পন্ন করো।",
+      "checklist": [
+        "HT DO/গ্যাং সুইচ ওপেন",
+        "LT আউটগোয়িং ফিউজ নামানো",
+        "ডিউ ডিশার্জ ও আর্থিং",
+        "নেমপ্লেট/সিল যাচাই"
+      ],
+      "actions": [
+        { "label": "সেফলি আইসোলেটেড", "goto": "visual_inspection", "style": "positive" }
+      ]
+    },
+    "visual_inspection": {
+      "type": "interaction",
+      "content": "বডি, স্ট্রাকচার ও চারপাশ পরীক্ষা করো।",
+      "actions": [
+        { "label": "তেল লিক দেখছি", "goto": "address_leak", "style": "neutral" },
+        { "label": "স্ট্রাকচার/ক্ল্যাম্প ঢিলা", "goto": "structure_fix", "style": "neutral" },
+        { "label": "বডি ফুলে গেছে", "goto": "result_need_overhaul", "style": "negative" },
+        { "label": "সব ক্লিয়ার", "goto": "oil_tests", "style": "positive" }
+      ]
+    },
+    "address_leak": {
+      "type": "interaction",
+      "content": "লিক পয়েন্ট পরিষ্কার করে গ্যাসকেট বা সিল্যান্ট দিয়ে বন্ধ করো।",
+      "actions": [
+        { "label": "লিক বন্ধ", "goto": "oil_tests", "style": "positive" }
+      ]
+    },
+    "structure_fix": {
+      "type": "interaction",
+      "content": "পোল, ক্রস-আর্ম, আর্থিং ফ্ল্যাট টাইট করো ও মরিচা রং করো।",
+      "actions": [
+        { "label": "স্ট্রাকচার রেডি", "goto": "oil_tests", "style": "positive" }
+      ]
+    },
+    "oil_tests": {
+      "type": "interaction",
+      "content": "অয়েল লেভেল গেজ ও BDV টেস্ট করো। ফলাফল?",
+      "actions": [
+        { "label": "লেভেল কম, BDV OK", "goto": "oil_topup", "style": "neutral" },
+        { "label": "BDV কম", "goto": "result_oil_processing", "style": "negative" },
+        { "label": "সব ঠিক", "goto": "tightness_check", "style": "positive" }
+      ]
+    },
+    "oil_topup": {
+      "type": "interaction",
+      "content": "ফিল্টারকৃত তেল টপ-আপ করো।",
+      "note": "এয়ার ভ্যালভ খুলে ধীরে ধীরে তেল ঢালো, সাইট গ্লাসে চিহ্ন পর্যন্ত।",
+      "actions": [
+        { "label": "টপ-আপ সম্পন্ন", "goto": "tightness_check", "style": "positive" }
+      ]
+    },
+    "tightness_check": {
+      "type": "interaction",
+      "content": "কানেকশন টর্কিং চেকলিস্ট।",
+      "checklist": [
+        "HT বুশিং নাট",
+        "LT বক্স বাস-বার",
+        "নিউট্রাল-আর্থ জাম্পার",
+        "ড্রেন ভালভ ও প্লাগ"
+      ],
+      "actions": [
+        { "label": "সব টাইট", "goto": "accessory_check", "style": "positive" }
+      ]
+    },
+    "accessory_check": {
+      "type": "interaction",
+      "content": "ব্রীদার, সিলিকা-জেল, কনজারভেটর ও LT এক্সেসরিজ দেখে নাও।",
+      "actions": [
+        { "label": "ব্রীদার/সিলিকা বদলাতে হবে", "goto": "breather_replace", "style": "neutral" },
+        { "label": "LT বক্সে কার্বন", "goto": "lt_box_service", "style": "neutral" },
+        { "label": "সব ঠিক", "goto": "testing_block", "style": "positive" }
+      ]
+    },
+    "breather_replace": {
+      "type": "interaction",
+      "content": "সিলিকা-জেল নীল না থাকলে নতুন দিয়ে দাও।",
+      "actions": [
+        { "label": "ব্রীদার ঠিক", "goto": "testing_block", "style": "positive" }
+      ]
+    },
+    "lt_box_service": {
+      "type": "interaction",
+      "content": "LT ফিউজ ক্যারিয়ার পরিষ্কার করে কন্টাক্ট গ্রিজ করো।",
+      "actions": [
+        { "label": "LT বক্স সেবাপ্রাপ্ত", "goto": "testing_block", "style": "positive" }
+      ]
+    },
+    "testing_block": {
+      "type": "interaction",
+      "content": "মেগার, রেশিও ও লোড-টেস্ট ডেটা কী বলছে?",
+      "note": "HV-LV IR ≥ 1000 MΩ, রেশিও উইন্ডিং কোড অনুসারে।",
+      "actions": [
+        { "label": "সব টেস্ট OK", "goto": "record_update", "style": "positive" },
+        { "label": "IR/রেশিও ফেল", "goto": "result_send_workshop", "style": "negative" }
+      ]
+    },
+    "record_update": {
+      "type": "interaction",
+      "content": "ডকুমেন্টেশন ও রি-এনার্জাইজ সিকোয়েন্স।",
+      "checklist": [
+        "ওয়র্কবুক/অ্যাপে সব ডেটা এন্ট্রি",
+        "ফটো আপলোড",
+        "কন্ট্রোল রুমে ক্লিয়ারেন্স",
+        "হালনাগাদ নামপ্লেট স্টিকার"
+      ],
+      "actions": [
+        { "label": "চার্জিং সম্পন্ন", "goto": "result_pm_success", "style": "positive" }
+      ]
+    },
+    "result_need_overhaul": {
+      "type": "result",
+      "status": "fail",
+      "title": "⚠️ বডি ডিফর্ম - ওয়ার্কশপ",
+      "content": "বডি ফুলে গেলে ইনটার্নাল ফল্ট। মেরামতের ঝুঁকি নেবে না, রিফার্বিশমেন্টের জন্য স্টোরে পাঠাও।"
+    },
+    "result_oil_processing": {
+      "type": "result",
+      "status": "fail",
+      "title": "🛢️ অয়েল প্রসেসিং প্রয়োজন",
+      "content": "BDV কম। অন-সাইট ফিল্ট্রেশন ইউনিট বা ওয়ার্কশপে ডিওয়াটারিং করতে হবে।"
+    },
+    "result_send_workshop": {
+      "type": "result",
+      "status": "fail",
+      "title": "🔍 টেস্ট ফেল - ডিপো মেরামত",
+      "content": "IR/রেশিও ব্যর্থ। কয়েল শর্ট হতে পারে। সাইটে চার্জ দিও না, রিক্যালিব্রেশনের জন্য ওয়ার্কশপে পাঠাও।"
+    },
+    "result_pm_success": {
+      "type": "result",
+      "status": "success",
+      "title": "✅ PM সম্পন্ন",
+      "content": "চার্জিং নরমাল। কাস্টমার নোটিফাই ও পরবর্তী সিডিউল আপডেট করে কাজ ক্লোজ করো।"
+    }
+  }
+}

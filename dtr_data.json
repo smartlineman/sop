@@ -1,0 +1,180 @@
+{
+  "meta": {
+    "appTitle": "DTR Troubleshooting SOP",
+    "appSubtitle": "লাইনম্যানের ডিজিটাল গাইড",
+    "startNode": "start"
+  },
+  "steps": {
+    "start": {
+      "type": "interaction",
+      "content": "কল রিসিভ: 'ট্রান্সফরমার এলাকায় কারেন্ট নেই' <br>সাইটে পৌঁছে সেফটি (PPE) নিয়েছ?",
+      "note": "সবার আগে নিজের সুরক্ষা। নিচের সেফটি গিয়ারগুলো নিশ্চিত করো:",
+      "checklist": [
+        "সেফটি হেলমেট পরেছি",
+        "হাতে গ্লাভস পরেছি",
+        "সেফটি জুতো পরেছি"
+      ],
+      "actions": [
+        { "label": "হ্যাঁ, আমি রেডি", "goto": "visual_check", "style": "neutral" }
+      ]
+    },
+    "visual_check": {
+      "type": "interaction",
+      "content": "নিচ থেকে ট্রান্সফরমারটি ভালো করে দেখো। কেমন দেখছ?",
+      "note": "পোলে ওঠার দরকার নেই। টর্চ মেরে দেখো।",
+      "actions": [
+        { "label": "বডি ফোলা / ফেটে তেল পড়ছে / আগুন", "goto": "result_defective_visual", "style": "negative" },
+        { "label": "বাইরে থেকে ফিটফাট মনে হচ্ছে", "goto": "check_fuses", "style": "positive" }
+      ]
+    },
+    "check_fuses": {
+      "type": "interaction",
+      "content": "DO (Drop Out) ফিউজগুলোর কী অবস্থা?",
+      "note": "ফিউজগুলো ভালো করে লক্ষ্য করো।",
+      "actions": [
+        { "label": "৩টি ফিউজই উড়ে গেছে / ব্যারেল ঝুলছে", "goto": "isolation_warning", "style": "negative" },
+        { "label": "১টি বা ২টি ফিউজ গেছে", "goto": "line_fault_check", "style": "neutral" }
+      ]
+    },
+    "line_fault_check": {
+      "type": "interaction",
+      "content": "এটা সম্ভবত লাইনের ফল্ট। জাম্পার এবং লাইন চেক করে ফিউজ মারো।",
+      "note": "সাধারণত ডালপালা লাগলে ১-২টো ফিউজ কাটে।",
+      "actions": [
+        { "label": "ফিউজ মেরেছি, লাইন চালু ✅", "goto": "result_success_line", "style": "positive" },
+        { "label": "ফিউজ মারার সাথে সাথে আবার উড়ে গেল", "goto": "isolation_warning", "style": "negative" }
+      ]
+    },
+    "isolation_warning": {
+      "type": "interaction",
+      "content": "সতর্ক হও! ভেতরে ফল্ট থাকতে পারে। মেগার টেস্ট করতে হবে।",
+      "note": "আইসোলেশন (Isolation) ছাড়া মেগার করা যাবে না। নিচের কাজগুলো নিশ্চিত করো:",
+      "checklist": [
+        "১. সব DO ব্যারেল নামিয়েছি",
+        "২. এলটি কেবিলগুলো বুশিং থেকে খুলে আলাদা করেছি"
+      ],
+      "actions": [
+        { "label": "আইসোলেশন কমপ্লিট করেছি", "goto": "megger_hv_earth", "style": "neutral" }
+      ]
+    },
+    "megger_hv_earth": {
+      "type": "interaction",
+      "content": "মেগার টেস্ট ১: HV কয়েল + বডি (Earth)। রিডিং কত?",
+      "note": "মেগারের এক মাথা HT বুশিংয়ে, অন্য মাথা বডিতে (রং ছাড়া জায়গায়) লাগাও।",
+      "actions": [
+        { "label": "জিরো (0) বা খুব কম", "goto": "result_defective_hv_earth", "style": "negative" },
+        { "label": "ভালো (High Value / Infinity)", "goto": "megger_lv_earth", "style": "positive" }
+      ]
+    },
+    "megger_lv_earth": {
+      "type": "interaction",
+      "content": "মেগার টেস্ট ২: LV কয়েল + বডি (Earth)। রিডিং কত?",
+      "note": "মেগারের এক মাথা LT বুশিং রডে, অন্য মাথা বডিতে।",
+      "actions": [
+        { "label": "জিরো (0) বা খুব কম", "goto": "result_defective_lv_earth", "style": "negative" },
+        { "label": "ভালো (High Value)", "goto": "megger_hv_lv", "style": "positive" }
+      ]
+    },
+    "megger_hv_lv": {
+      "type": "interaction",
+      "content": "মেগার টেস্ট ৩: HV কয়েল + LV কয়েল। রিডিং কত?",
+      "note": "মেগারের এক মাথা HT বুশিংয়ে, অন্য মাথা LT বুশিংয়ে।",
+      "actions": [
+        { "label": "জিরো (0) বা কন্টিনিউটি পাচ্ছে", "goto": "result_defective_short", "style": "negative" },
+        { "label": "ইনফিনিটি / হাই ভ্যালু", "goto": "tit_bit_diagnosis", "style": "positive" }
+      ]
+    },
+    "tit_bit_diagnosis": {
+      "type": "interaction",
+      "content": "অভিনন্দন! ট্রান্সফরমার কয়েল ভালো আছে। সমস্যাটি 'Tit-bit'। কী সমস্যা দেখতে পাচ্ছ?",
+      "note": "ভালো করে বুশিং, তেল এবং কানেকশন চেক করো।",
+      "actions": [
+        { "label": "বুশিং রড / স্টাড পুড়ে গেছে", "goto": "repair_rod", "style": "neutral" },
+        { "label": "বুশিং দিয়ে তেল চুইয়ে পড়ছে", "goto": "repair_leak", "style": "neutral" },
+        { "label": "এলটি বক্সের ফিউজ ক্যারিয়ার জ্বলেছে", "goto": "repair_fuse_base", "style": "neutral" },
+        { "label": "তেল লেভেল খুব কম", "goto": "repair_oil", "style": "neutral" }
+      ]
+    },
+    "repair_rod": {
+      "type": "interaction",
+      "content": "অ্যাকশন: সাইটেই রড বদলাতে হবে।",
+      "note": "পুরানো রড খুলে নতুন ব্রাস রড এবং ওয়াশার লাগিয়ে টাইট করো। ট্রান্সফরমার নামানোর দরকার নেই।",
+      "actions": [
+        { "label": "কাজ শেষ। কানেকশন টাইট।", "goto": "final_charging", "style": "positive" }
+      ]
+    },
+    "repair_leak": {
+      "type": "interaction",
+      "content": "অ্যাকশন: লিকেজ বন্ধ করতে হবে।",
+      "note": "বুশিংয়ের নাট লুজ করে গ্যাসকেট বা 'O-Ring' বদলে দাও। বা এম-সিল ব্যবহার করো।",
+      "actions": [
+        { "label": "লিক বন্ধ হয়েছে।", "goto": "final_charging", "style": "positive" }
+      ]
+    },
+    "repair_fuse_base": {
+      "type": "interaction",
+      "content": "অ্যাকশন: কিট-ক্যাট বেস বদলাও।",
+      "note": "পুরো এলটি বক্স বদলানোর দরকার নেই। শুধু পোড়া ফিউজ বেসটি বদলে নতুন লাগাও।",
+      "actions": [
+        { "label": "নতুন বেস লাগানো শেষ।", "goto": "final_charging", "style": "positive" }
+      ]
+    },
+    "repair_oil": {
+      "type": "interaction",
+      "content": "অ্যাকশন: তেল টপ-আপ করো।",
+      "note": "ড্রাম থেকে ভালো তেল নিয়ে টপ-আপ করো। লিক থাকলে বন্ধ করো।",
+      "actions": [
+        { "label": "তেল ভরা শেষ।", "goto": "final_charging", "style": "positive" }
+      ]
+    },
+    "final_charging": {
+      "type": "interaction",
+      "content": "চার্জিং প্রসিডিওর (Charging SOP)",
+      "note": "চার্জ করার আগে নিচের ধাপগুলো একে একে সম্পন্ন করো:",
+      "checklist": [
+        "১. আগে DO ফিউজ মেরেছি",
+        "২. এলটি সাইডে ভোল্টেজ মেপেছি (প্রতি ফেজে ২৩০V+)",
+        "৩. ভোল্টেজ ঠিক আছে, এলটি লোড কানেক্ট করেছি"
+      ],
+      "actions": [
+        { "label": "সব করেছি। লাইট জ্বলছে! 💡", "goto": "result_success_repair", "style": "positive" }
+      ]
+    },
+    "result_defective_visual": {
+      "type": "result",
+      "status": "fail",
+      "title": "❌ ট্রান্সফরমার Defective (Visual Fail)",
+      "content": "বডি ফোলা বা তেল পড়া মানে ভেতরে বড় ব্লাস্ট হয়েছে। আর চেষ্টা করো না।<br><strong>অ্যাকশন:</strong> স্টোর রিটার্ন (SR) নোট বানাও এবং গাড়ি ডাকো।"
+    },
+    "result_defective_hv_earth": {
+      "type": "result",
+      "status": "fail",
+      "title": "❌ ট্রান্সফরমার Defective (HV Earth)",
+      "content": "HV কয়েল বডি হয়ে গেছে। সাইটে সারানো অসম্ভব।<br><strong>অ্যাকশন:</strong> স্টোরে ফেরত পাঠাও।"
+    },
+    "result_defective_lv_earth": {
+      "type": "result",
+      "status": "fail",
+      "title": "❌ ট্রান্সফরমার Defective (LV Earth)",
+      "content": "LV কয়েল বডি হয়ে গেছে।<br><strong>অ্যাকশন:</strong> ট্রান্সফরমার বদলাতে হবে।"
+    },
+    "result_defective_short": {
+      "type": "result",
+      "status": "fail",
+      "title": "❌ ট্রান্সফরমার Defective (Inter-turn Short)",
+      "content": "HV এবং LV কয়েল ভেতরে শর্ট হয়ে গেছে। চার্জ দিলে ব্লাস্ট করবে।<br><strong>অ্যাকশন:</strong> স্টোরে ফেরত পাঠাও।"
+    },
+    "result_success_line": {
+      "type": "result",
+      "status": "success",
+      "title": "✅ লাইন চালু হয়েছে!",
+      "content": "এটা ট্রান্সফরমারের দোষ ছিল না, লাইনের ফল্ট ছিল।<br><strong>গুড জব!</strong>"
+    },
+    "result_success_repair": {
+      "type": "result",
+      "status": "success",
+      "title": "✅ টিট-বিট রিপেয়ার সফল!",
+      "content": "তুমি একটি ট্রান্সফরমার বাঁচিয়ে দিলে।<br>গ্রাহক খুশি, বস খুশি!<br><strong>সাবাস!</strong>"
+    }
+  }
+}
