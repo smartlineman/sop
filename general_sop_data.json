@@ -1,0 +1,132 @@
+{
+    "meta": {
+        "appTitle": "General Electrical SOP",
+        "appSubtitle": "সার্বজনীন ইলেক্ট্রিক্যাল ওয়ার্ক গাইড",
+        "startNode": "start"
+    },
+    "steps": {
+        "start": {
+            "type": "interaction",
+            "content": "যেকোনো ইলেক্ট্রিক্যাল কাজ শুরু করার আগে নিজের সুরক্ষা নিশ্চিত করো। <br>ব্যক্তিগত সুরক্ষা সরঞ্জাম (PPE) নিয়েছ?",
+            "note": "সুরক্ষা সবার আগে। নিচের বিষয়গুলো যাচাই করো:",
+            "checklist": [
+                "সেফটি হেলমেট (Helmet)",
+                "ইন্সুলিয়েটেড গ্লাভস (11kV/LT Gloves)",
+                "সেফটি জুতো (Safety Shoes)",
+                "রিফ্লেক্টিভ জ্যাকেট (Reflective Jacket)"
+            ],
+            "actions": [
+                {
+                    "label": "হ্যাঁ, PPE রেডি",
+                    "goto": "ptw_check",
+                    "style": "positive"
+                }
+            ]
+        },
+        "ptw_check": {
+            "type": "interaction",
+            "content": "পারমিট-টু-ওয়ার্ক (PTW) কী অবস্থা?",
+            "note": "অনুমতি ছাড়া লাইনে হাত দেওয়া দণ্ডনীয় অপরাধ এবং ঝুঁকিপূর্ণ।",
+            "actions": [
+                {
+                    "label": "PTW রিসিভ করেছি (Signed)",
+                    "goto": "isolation_process",
+                    "style": "positive"
+                },
+                {
+                    "label": "PTW ছাড়া কাজ করছি (Emergency)",
+                    "goto": "isolation_process",
+                    "style": "neutral"
+                }
+            ]
+        },
+        "isolation_process": {
+            "type": "interaction",
+            "content": "আইসোলেশন (Isolation): সব সম্ভাব্য পাওয়ার সোর্স থেকে বিচ্ছিন্ন করো।",
+            "note": "বিচ্ছিন্ন করার সময় নিচের চেকলিস্ট ফলো করো:",
+            "checklist": [
+                "মেইন সুইচ / VCB / OCB অফ করেছি",
+                "লিঙ্ক / ফিউজ / DO ব্যারেল খুলেছি",
+                "ব্যাক-ফিড (DG/Inverter) সোর্স চেক করেছি",
+                "কন্ট্রোল প্যানেল লক (LOTO) করেছি"
+            ],
+            "actions": [
+                {
+                    "label": "আইসোলেশন কমপ্লিট",
+                    "goto": "discharge_earth",
+                    "style": "positive"
+                }
+            ]
+        },
+        "discharge_earth": {
+            "type": "interaction",
+            "content": "ডিসচার্জ এবং আর্থিং (Discharge & Earthing)",
+            "note": "লাইনে জমে থাকা চার্জ বের করে দেওয়া এবং আর্থ করা বাধ্যতামূলক।",
+            "checklist": [
+                "ডিসচার্জ রড দিয়ে ভোল্টেজ শূন্য করেছি",
+                "সব ফেজে টেম্পোরারি আর্থিং লাগিয়েছি",
+                "আর্থিং ক্ল্যাম্প টাইট আছে"
+            ],
+            "actions": [
+                {
+                    "label": "লাইন সেফ, কাজ শুরু করো",
+                    "goto": "work_execution",
+                    "style": "neutral"
+                }
+            ]
+        },
+        "work_execution": {
+            "type": "interaction",
+            "content": "বর্তমানে কাজ (Actual Work) চলছে...",
+            "note": "কাজের সময় সতর্কতা অবলম্বন করো এবং ভালো মেটেরিয়াল ব্যবহার করো।",
+            "actions": [
+                {
+                    "label": "কাজ শেষ হয়েছে ✅",
+                    "goto": "sd_withdrawal",
+                    "style": "positive"
+                }
+            ]
+        },
+        "sd_withdrawal": {
+            "type": "interaction",
+            "content": "শাট-ডাউন উইথড্রয়াল (S/D Withdrawal)",
+            "note": "লাইন চার্জ করার আগে এরিয়া ক্লিয়ার করতে হবে।",
+            "checklist": [
+                "সব টুলস এবং বাড়তি মেটেরিয়াল সরিয়েছি",
+                "লোকজন লাইন থেকে নিচে নেমেছে",
+                "টেম্পোরারি আর্থিং খুলেছি"
+            ],
+            "actions": [
+                {
+                    "label": "উইথড্রয়াল কমপ্লিট",
+                    "goto": "restoration_process",
+                    "style": "positive"
+                }
+            ]
+        },
+        "restoration_process": {
+            "type": "interaction",
+            "content": "রিস্টোরেশন এবং চার্জিং (Restoration & Charging)",
+            "note": "ধাপে ধাপে লাইন চার্জ করো:",
+            "checklist": [
+                "লিঙ্ক / ফিউজ / DO ব্যারেল লাগিয়েছি",
+                "মেইন সুইচ / ব্রেকার অন করেছি",
+                "ভোল্টেজ চেক করেছি",
+                "PTW সারেন্ডার (Return) করেছি"
+            ],
+            "actions": [
+                {
+                    "label": "লাইন সাকসেসফুলি রিস্টোরড ✅",
+                    "goto": "result_success_general",
+                    "style": "positive"
+                }
+            ]
+        },
+        "result_success_general": {
+            "type": "result",
+            "status": "success",
+            "title": "✅ কাজ সফলভাবে সম্পন্ন!",
+            "content": "তুমি সঠিক সেফটি প্রোটোকল মেনে কাজ শেষ করেছ। <br><strong>সেফটি ফার্স্ট, অলওয়েজ বেস্ট!</strong>"
+        }
+    }
+}

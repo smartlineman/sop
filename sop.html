@@ -218,6 +218,28 @@
             box-shadow: 0 10px 16px rgba(0, 0, 0, 0.08);
         }
 
+        .sop-card.highlighted {
+            border: 2px solid var(--accent-color);
+            background: linear-gradient(to bottom right, #ffffff, #fffdfa);
+            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sop-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent-color);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-bottom-left-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
         .sop-card h3 {
             margin: 0;
             font-size: 1rem;
@@ -1185,7 +1207,7 @@
 
     <button id="progress-launcher" class="progress-launcher" onclick="toggleProgressPanel()">
         <span class="launcher-label">Trail</span>
-        <span class="launcher-arrow">⮜</span>
+        <span class="launcher-arrow">◀</span>
     </button>
 
     <div id="panel-overlay" class="panel-overlay" onclick="closeAllPanels()"></div>
@@ -1226,6 +1248,16 @@
 
     <script>
         const sopCatalog = [
+            {
+                id: 'general_sop',
+                title: 'General SOP',
+                isHighlighted: true,
+                subtitle: 'সার্বজনীন ইলেক্ট্রিক্যাল ওয়ার্ক গাইড',
+                summary: 'PPE, PTW, Isolation, Discharge এবং Restoration-এর সার্বজনীন ধাপসমূহ।',
+                json: 'general_sop_data.json',
+                tags: ['General', 'Safety', 'PTW'],
+                icon: '🛡️'
+            },
             {
                 id: 'dtr',
                 title: 'ডিটিআর ব্রেকডাউন ও টিট-বিট রিপেয়ার',
@@ -1301,6 +1333,10 @@
         ];
 
         const downloadCatalog = {
+            general_sop: [
+                { label: 'General PTW Form', type: 'PTW', href: 'generic_ptw.html' },
+                { label: 'Safety Checklist', type: 'Checklist', href: 'risk_assessment_form.html' }
+            ],
             dtr: [
                 { label: '11kV PTW Template', type: 'PTW', href: 'ptw_11kv_template.html' },
                 { label: 'DTR Repair Checklist', type: 'Checklist', href: 'dtr_repair_checklist.html' }
@@ -1411,8 +1447,11 @@
 
             const filteredSops = getFilteredSops();
             const cardsHtml = filteredSops.map(sop => {
+                const highlightClass = sop.isHighlighted ? 'highlighted' : '';
+                const badge = sop.isHighlighted ? '<div class="sop-badge">Essential</div>' : '';
                 return `
-                <div class="sop-card" onclick="loadSop('${sop.id}')">
+                <div class="sop-card ${highlightClass}" onclick="loadSop('${sop.id}')">
+                    ${badge}
                     <h3>${sop.title}</h3>
                 </div>`;
             }).join('');
