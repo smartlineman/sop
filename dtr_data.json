@@ -88,6 +88,15 @@
       "type": "interaction",
       "content": "অভিনন্দন! ট্রান্সফরমার কয়েল ভালো আছে। সমস্যাটি 'Tit-bit'। কী সমস্যা দেখতে পাচ্ছ?",
       "note": "ভালো করে বুশিং, তেল এবং কানেকশন চেক করো।",
+      "multiSelect": {
+        "enabled": true,
+        "ctaLabel": "সমস্যাগুলো বেছে নাও",
+        "planTitle": "টিট-বিট ফিক্স প্ল্যান",
+        "planSubtitle": "একাধিক ইস্যু একসাথে সমাধান করতে নিচের প্ল্যান ফলো করো।",
+        "emptyState": "কমপক্ষে একটি সমস্যা বেছে নাও।",
+        "proceedLabel": "সব ঠিক? চার্জিং ধাপে যাও",
+        "proceedTo": "final_charging"
+      },
       "actions": [
         { "label": "বুশিং রড / স্টাড পুড়ে গেছে", "goto": "repair_rod", "style": "neutral" },
         { "label": "বুশিং দিয়ে তেল চুইয়ে পড়ছে", "goto": "repair_leak", "style": "neutral" },

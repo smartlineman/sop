@@ -33,7 +33,14 @@
     },
     "patrol_section": {
       "type": "interaction",
-      "content": "প্যাট্রোল করে কী দেখতে পেলে?",
+      "content": "প্যাট্রোল করে কী কী সমস্যা দেখতে পেলে? (একাধিক হলে সব বেছে নাও)",
+      "multiSelect": {
+        "enabled": true,
+        "ctaLabel": "নির্বাচিত সমস্যাগুলো ঠিক করো",
+        "planTitle": "রিপেয়ার প্ল্যান",
+        "planSubtitle": "যেসব সমস্যা পেয়েছ সব ঠিক করে তারপর চার্জিং করো",
+        "emptyState": "কোনো সমস্যা নির্বাচন করা হয়নি"
+      },
       "actions": [
         { "label": "গাছ/ডাল কন্ডাক্টরে", "goto": "tree_contact", "style": "neutral" },
         { "label": "জাম্পার/DO বার্ন", "goto": "jumper_issue", "style": "neutral" },
@@ -76,7 +83,14 @@
     },
     "repair_hidden": {
       "type": "interaction",
-      "content": "সেকশনে কোন ডিভাইস ত্রুটি?",
+      "content": "সেকশনে কোন কোন ডিভাইসে ত্রুটি? (একাধিক হলে সব বেছে নাও)",
+      "multiSelect": {
+        "enabled": true,
+        "ctaLabel": "সমস্যাগুলো সারাও",
+        "planTitle": "ডিভাইস রিপেয়ার লিস্ট",
+        "planSubtitle": "প্রতিটি ত্রুটি ঠিক করে চার্জিং করো",
+        "emptyState": "কোনো ডিভাইস নির্বাচন করা হয়নি"
+      },
       "actions": [
         { "label": "LA বার্ন বা ফেটে গেছে", "goto": "la_replacement", "style": "neutral" },
         { "label": "পিন/ডিস্ক ইনসুলেটর ট্র্যাক", "goto": "insulator_clean", "style": "neutral" },

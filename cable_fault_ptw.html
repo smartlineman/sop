@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cable Fault Localization PTW</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: #666;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkbox-item input {
+            width: auto;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .warning-box strong {
+            color: #856404;
+        }
+        .signature-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .signature-box {
+            border-top: 2px solid #333;
+            padding-top: 10px;
+            text-align: center;
+        }
+        .btn-print {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .btn-print:hover {
+            background: #229954;
+        }
+        @media print {
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+            .btn-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="header">
+            <h1>PERMIT TO WORK (PTW)</h1>
+            <p>Underground Cable Fault Localization & Repair</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Work Details</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>PTW No:</label>
+                    <input type="text" placeholder="PTW/UG/____/2026">
+                </div>
+                <div class="form-group">
+                    <label>Date & Time:</label>
+                    <input type="datetime-local">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Feeder Name:</label>
+                    <input type="text" placeholder="11kV Feeder Name">
+                </div>
+                <div class="form-group">
+                    <label>RMU/Substation:</label>
+                    <input type="text" placeholder="Location">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Cable Route/Location:</label>
+                <input type="text" placeholder="From _____ To _____">
+            </div>
+            <div class="form-group">
+                <label>Fault Type:</label>
+                <select>
+                    <option>Short Circuit (Phase-to-Earth)</option>
+                    <option>Open Circuit</option>
+                    <option>Phase-to-Phase Fault</option>
+                    <option>Cable Damage (Mechanical)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠ DANGER:</strong> Underground cable work involves HIGH VOLTAGE. Complete isolation and LOTO mandatory.
+        </div>
+
+        <div class="section">
+            <div class="section-title">Isolation Checklist</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="iso1">
+                    <label for="iso1">Feeder breaker/switch opened and locked (LOTO applied)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="iso2">
+                    <label for="iso2">Earth switch closed at both ends (if available)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="iso3">
+                    <label for="iso3">Cable discharged to remove capacitive charge</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="iso4">
+                    <label for="iso4">Zero voltage verified with approved tester</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="iso5">
+                    <label for="iso5">Danger tags and barricades placed</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Work Scope</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Fault localization (TDR/Thumper/VLF test)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Cable excavation & inspection</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Cable jointing/repair</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Insulation testing (Megger/HiPot)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Backfill and road restoration</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Safety Precautions</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Full PPE (Helmet, Gloves, Safety Shoes) worn by all crew</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Excavation permit obtained (KMC/Local authority)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Other utilities (Gas/Water/Telecom) located and marked</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Traffic diversion/barricades in place</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>First aid kit and emergency contact numbers available</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Work Party Members</div>
+            <div class="form-group">
+                <label>Person-in-Charge:</label>
+                <input type="text" placeholder="Name & Designation">
+            </div>
+            <div class="form-group">
+                <label>Team Members (Names):</label>
+                <textarea placeholder="1. &#10;2. &#10;3. &#10;4."></textarea>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Test Equipment</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Megger (Model: ______ Serial: ______)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>TDR (Model: ______ Serial: ______)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>Thumper (Model: ______ Serial: ______)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox">
+                    <label>VLF Test Set (Model: ______ Serial: ______)</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="signature-section">
+            <div class="signature-box">
+                <p><strong>Issued By</strong></p>
+                <p style="margin-top: 40px;">_______________</p>
+                <p>Authorizing Officer</p>
+                <p>Date/Time: _______</p>
+            </div>
+            <div class="signature-box">
+                <p><strong>Received By</strong></p>
+                <p style="margin-top: 40px;">_______________</p>
+                <p>Person-in-Charge</p>
+                <p>Date/Time: _______</p>
+            </div>
+            <div class="signature-box">
+                <p><strong>Work Completed</strong></p>
+                <p style="margin-top: 40px;">_______________</p>
+                <p>Person-in-Charge</p>
+                <p>Date/Time: _______</p>
+            </div>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">🖨 Print PTW</button>
+    </div>
+</body>
+</html>

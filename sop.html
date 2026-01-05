@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DTR Troubleshooting Assistant</title>
+    <title>SOP</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -75,6 +75,75 @@
             flex-wrap: wrap;
             gap: 8px;
             justify-content: center;
+        }
+
+        .utility-hub {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0 30px 10px;
+        }
+
+        .utility-toggle {
+            width: 100%;
+            border: 1px solid #e0e6ed;
+            border-radius: 12px;
+            background: #fff;
+            color: var(--primary-color);
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .utility-toggle.active {
+            border-color: rgba(230,126,34,0.7);
+            box-shadow: 0 8px 20px rgba(230,126,34,0.15);
+        }
+
+        .utility-toggle-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #6c7a89;
+        }
+
+        .utility-toggle-icon {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .utility-toggle.menu-open .utility-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .utility-menu {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+
+        .utility-menu.open {
+            max-height: 2000px;
+            margin-top: 12px;
+        }
+
+        .utility-section {
+            background: #fff;
+            border: 1px solid #eef0f2;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            padding: 0;
+            margin-bottom: 14px;
+            overflow: hidden;
         }
 
         .hub-btn {
@@ -388,6 +457,246 @@
             text-transform: uppercase;
         }
 
+        .multi-select-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .multi-select-head {
+            width: 100%;
+            border: 1px solid #eef0f2;
+            border-radius: 14px;
+            padding: 16px;
+            background: #fff;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .multi-select-counter {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .multi-select-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .selection-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(44,62,80,0.06);
+            font-size: 0.82rem;
+            color: var(--primary-color);
+            border: 1px solid rgba(44,62,80,0.08);
+        }
+
+        .selection-pill button {
+            border: none;
+            background: transparent;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: inherit;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .selection-pill button:hover {
+            color: var(--danger-color);
+        }
+
+        .selection-pill--empty {
+            background: transparent;
+            border-style: dashed;
+            color: #8e9aa7;
+        }
+
+        .multi-option-card {
+            border: 1px solid #eef0f2;
+            border-radius: 12px;
+            background: rgba(44,62,80,0.02);
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: border 0.2s ease, background 0.2s ease, transform 0.2s ease;
+            text-align: left;
+        }
+
+        .multi-option-card .multi-option-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .multi-option-card .multi-option-hint {
+            font-size: 0.8rem;
+            color: #6c7a89;
+            line-height: 1.4;
+        }
+
+        .multi-option-card .multi-option-check {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(44,62,80,0.35);
+            border-radius: 6px;
+            flex-shrink: 0;
+            margin-top: 3px;
+            background: #fff;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .multi-option-card.selected .multi-option-check {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(230,126,34,0.15);
+        }
+
+        .multi-option-card.selected {
+            border-color: rgba(230,126,34,0.5);
+            background: rgba(230,126,34,0.08);
+            transform: translateY(-2px);
+        }
+
+        .multi-plan-btn {
+            width: 100%;
+            border-radius: 10px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, opacity 0.3s ease;
+            margin-bottom: 16px;
+        }
+
+        .multi-plan-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .multi-plan-summary {
+            width: 100%;
+            border: 1px solid #eef0f2;
+            border-radius: 14px;
+            padding: 18px 20px;
+            background: #fff;
+            text-align: left;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+            transition: border 0.2s ease;
+        }
+
+        .multi-plan-summary--empty {
+            border-style: dashed;
+            color: #8e9aa7;
+        }
+
+        .multi-plan-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .multi-plan-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .multi-plan-subtitle {
+            margin: 6px 0 0;
+            font-size: 0.85rem;
+            color: #6c7a89;
+        }
+
+        .multi-plan-count {
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .multi-plan-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .multi-plan-card {
+            border: 1px solid rgba(44,62,80,0.08);
+            border-radius: 12px;
+            padding: 14px 16px;
+            background: rgba(44,62,80,0.02);
+        }
+
+        .multi-plan-card h4 {
+            margin: 0 0 8px;
+            font-size: 0.95rem;
+            color: var(--primary-color);
+        }
+
+        .multi-plan-body {
+            font-size: 0.9rem;
+            color: #4a4a4a;
+            line-height: 1.5;
+        }
+
+        .multi-plan-note {
+            margin: 10px 0;
+            font-size: 0.85rem;
+            color: #6c7a89;
+        }
+
+        .multi-plan-list {
+            margin: 10px 0 0 16px;
+            padding: 0;
+            color: #34495e;
+        }
+
+        .multi-plan-card button {
+            margin-top: 12px;
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .multi-plan-footer {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(44,62,80,0.08);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .multi-plan-proceed {
+            background: var(--success-color);
+            color: #fff;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(39,174,96,0.2);
+        }
+
         /* Animation */
         .fade-in {
             animation: fadeIn 0.5s;
@@ -552,24 +861,12 @@
         }
 
         .filter-panel {
-            position: fixed;
-            top: 20px;
-            left: 0;
-            width: 280px;
-            max-width: 85vw;
-            height: calc(100vh - 40px);
-            background: #fff;
-            box-shadow: 12px 0 35px rgba(0,0,0,0.18);
-            transform: translateX(-105%);
-            transition: transform 0.4s ease;
-            z-index: 940;
-            border-radius: 0 18px 18px 0;
+            width: 100%;
+            background: transparent;
+            box-shadow: none;
+            border-radius: 0;
             display: flex;
             flex-direction: column;
-        }
-
-        .filter-panel.open {
-            transform: translateX(0);
         }
 
         .progress-panel-header {
@@ -630,12 +927,12 @@
         }
 
         .filter-panel-content {
-            flex: 1;
-            overflow-y: auto;
             padding: 16px 20px;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            max-height: 240px;
+            overflow-y: auto;
         }
 
         .filter-option {
@@ -699,52 +996,82 @@
             font-weight: 600;
         }
 
-        .progress-launcher:hover {
-            background: var(--accent-color);
+        .downloads-panel {
+            width: 100%;
+            background: transparent;
+            box-shadow: none;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
         }
 
-        .launcher-arrow {
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
+        .downloads-panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
-        .progress-launcher.active .launcher-arrow {
-            transform: rotate(180deg);
+        .downloads-panel-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--primary-color);
         }
 
-        .progress-launcher.ping {
-            animation: trailPing 0.9s ease;
+        .downloads-panel-header p {
+            margin: 4px 0 0;
+            font-size: 0.8rem;
+            color: #6c7a89;
         }
 
-        .filter-launcher {
-            position: fixed;
-            top: 30%;
-            left: 0;
-            transform: translateY(-50%);
+        .downloads-panel-content {
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .downloads-panel-footer {
+            padding: 14px 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.83rem;
+            color: #6c7a89;
+        }
+
+        .download-card {
+            border: 1px solid #eef0f2;
+            border-radius: 12px;
+            padding: 12px 14px;
+            background: rgba(44,62,80,0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .download-card strong {
+            font-size: 0.95rem;
+            color: var(--primary-color);
+        }
+
+        .download-meta {
+            font-size: 0.78rem;
+            color: #6c7a89;
+        }
+
+        .download-link {
+            align-self: flex-start;
             background: var(--primary-color);
             color: #fff;
             border: none;
-            border-radius: 0 999px 999px 0;
-            padding: 10px 20px;
-            display: flex;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            z-index: 960;
-            font-weight: 600;
+            gap: 6px;
         }
 
-        .filter-launcher:hover {
+        .download-link:hover {
             background: var(--accent-color);
-        }
-
-        .filter-launcher.active {
-            background: rgba(230,126,34,0.85);
-        }
-
-        .filter-launcher.active .launcher-arrow {
-            transform: rotate(180deg);
         }
 
         @keyframes trailPing {
@@ -778,6 +1105,47 @@
             </button>
         </div>
     </div>
+
+        <div class="utility-hub">
+            <button id="utility-menu-toggle" class="utility-toggle" onclick="toggleUtilityMenu()" aria-expanded="false">
+                <span>Filter & Downloads</span>
+                <span class="utility-toggle-right">
+                    <span id="utility-toggle-meta">No filters applied</span>
+                    <span class="utility-toggle-icon" aria-hidden="true">⌄</span>
+                </span>
+            </button>
+            <div id="utility-menu" class="utility-menu" aria-hidden="true">
+                <section id="filter-panel" class="utility-section">
+                    <div class="filter-panel-header">
+                        <div>
+                            <h3>Filter SOPs</h3>
+                            <p>Select keywords to narrow the list</p>
+                        </div>
+                        <div class="filter-panel-actions">
+                            <button class="filter-clear-btn" onclick="clearFilters()">Reset</button>
+                        </div>
+                    </div>
+                    <div class="filter-panel-content" id="filter-options">
+                        <span class="mini-map-empty">Loading keywords…</span>
+                    </div>
+                    <div class="filter-panel-footer">
+                        <span id="filter-summary">All SOPs visible</span>
+                    </div>
+                </section>
+                <section id="downloads-panel" class="utility-section">
+                    <div class="downloads-panel-header">
+                        <h3>Downloads</h3>
+                        <p>PTW templates, permits & checklists</p>
+                    </div>
+                    <div class="downloads-panel-content" id="download-list">
+                        <span class="mini-map-empty">Select an SOP to view downloads</span>
+                    </div>
+                    <div class="downloads-panel-footer">
+                        <span id="downloads-summary">No SOP selected</span>
+                    </div>
+                </section>
+            </div>
+        </div>
     
     <div class="progress-indicator" id="step-tracker">Select an SOP to begin</div>
     <div class="trail-callout">
@@ -789,35 +1157,12 @@
     </div>
 </div>
 
-<button id="filter-launcher" class="filter-launcher" onclick="toggleFilterPanel()">
-    <span class="launcher-arrow">⮞</span>
-    <span class="launcher-label">Filter</span>
-</button>
-
 <button id="progress-launcher" class="progress-launcher" onclick="toggleProgressPanel()">
     <span class="launcher-label">Trail</span>
     <span class="launcher-arrow">⮜</span>
  </button>
 
 <div id="panel-overlay" class="panel-overlay" onclick="closeAllPanels()"></div>
-
-<div id="filter-panel" class="filter-panel" aria-hidden="true">
-    <div class="filter-panel-header">
-        <div>
-            <h3>Filter SOPs</h3>
-            <p>Select keywords to narrow the list</p>
-        </div>
-        <div class="filter-panel-actions">
-            <button class="filter-clear-btn" onclick="clearFilters()">Reset</button>
-        </div>
-    </div>
-    <div class="filter-panel-content" id="filter-options">
-        <span class="mini-map-empty">Loading keywords…</span>
-    </div>
-    <div class="filter-panel-footer">
-        <span id="filter-summary">All SOPs visible</span>
-    </div>
-</div>
 
 <div id="progress-panel" class="progress-panel" aria-hidden="true">
     <div class="progress-panel-header">
@@ -857,7 +1202,7 @@
     const sopCatalog = [
         {
             id: 'dtr',
-            title: 'DTR Breakdown & Tit-bit Repair',
+            title: 'ডিটিআর ব্রেকডাউন ও টিট-বিট রিপেয়ার',
             subtitle: 'লাইনম্যানের ডিজিটাল গাইড',
             summary: 'ট্রান্সফরমার ফল্ট ডায়াগনোসিস, মেগার টেস্ট এবং সাইটে টিট-বিট রিকভারি।',
             json: 'dtr_data.json',
@@ -866,7 +1211,7 @@
         },
         {
             id: 'ht_line',
-            title: '11kV Line Restoration',
+            title: '১১কেভি লাইন রিস্টোরেশন',
             subtitle: 'ফিডার ব্রেকডাউন SOP',
             summary: 'PTW, প্যাট্রোলিং, জাম্পার/গাছ জটিলতা এবং রি-চার্জিং সিকোয়েন্স।',
             json: 'ht_line_data.json',
@@ -875,7 +1220,7 @@
         },
         {
             id: 'lt_service',
-            title: 'LT Feeder & Service Fault',
+            title: 'এলটি ফিডার ও সার্ভিস ফল্ট',
             subtitle: 'লো-টেনশন ফিল্ড গাইড',
             summary: 'পিলার বক্স, আউটগোয়িং কেবল, লোড ব্যালেন্সিং ও স্ল্যাব জব চেক।',
             json: 'lt_service_data.json',
@@ -884,7 +1229,7 @@
         },
         {
             id: 'dtr_pm',
-            title: 'DTR Preventive Maintenance',
+            title: 'ডিটিআর প্রিভেন্টিভ মেইনটেনেন্স',
             subtitle: 'সূচিবদ্ধ মেইনটেনেন্স SOP',
             summary: 'আইসোলেশন, টর্কিং, অয়েল অ্যানালাইসিস এবং রেকর্ড আপডেট চেকলিস্ট।',
             json: 'dtr_pm_data.json',
@@ -902,7 +1247,7 @@
         },
         {
             id: 'domestic_meter',
-            title: 'Domestic Meter Install',
+            title: 'ডোমেস্টিক মিটার ইনস্টল',
             subtitle: 'নতুন সংযোগ SOP',
             summary: 'ওয়ার্ক-অর্ডার যাচাই থেকে সিলিং ও অ্যাপ লগ আপডেট পর্যন্ত সম্পূর্ণ ধাপ।',
             json: 'new_meter_install_data.json',
@@ -911,13 +1256,60 @@
         },
         {
             id: 'pin_insulator',
-            title: '11kV Pin Insulator',
+            title: '১১কেভি পিন ইনসুলেটর',
             subtitle: 'ব্রেকডাউন রিপ্লেসমেন্ট',
             summary: 'প্যাট্রোলিংয়ে চিপ করা ইনসুলেটর বদলানোর পারমিট, PPE ও চার্জিং ধাপসমূহ।',
             json: 'pin_insulator_replacement_data.json',
             tags: ['11kV', 'Maintenance'],
             icon: '🪜'
+        },
+        {
+            id: 'ug_cable_fault',
+            title: 'আন্ডারগ্রাউন্ড কেবল ফল্ট',
+            subtitle: 'ফল্ট লোকেলাইজেশন গাইড',
+            summary: 'থাম্পার, TDR, VLF টেস্ট দিয়ে ক্যাবল ফল্ট খুঁজে বের করো এবং রিপেয়ার করো।',
+            json: 'underground_cable_fault_data.json',
+            tags: ['UG Cable', '11kV', 'Fault'],
+            icon: '🔍'
         }
+    ];
+
+    const downloadCatalog = {
+        dtr: [
+            { label: '11kV PTW Template', type: 'PTW', href: 'ptw_11kv_template.html' },
+            { label: 'DTR Repair Checklist', type: 'Checklist', href: 'dtr_repair_checklist.html' }
+        ],
+        ht_line: [
+            { label: 'Feeder Isolation Permit', type: 'Permit Form', href: 'feeder_isolation_permit.html' },
+            { label: 'HT Line Patrol Log', type: 'Checklist', href: 'ht_patrol_log.html' }
+        ],
+        lt_service: [
+            { label: 'LT Service Checklist', type: 'Checklist', href: 'lt_service_checklist.html' }
+        ],
+        dtr_pm: [
+            { label: 'Preventive Maintenance Sheet', type: 'Checklist', href: 'dtr_pm_sheet.html' },
+            { label: 'Oil Sampling Form', type: 'Form', href: 'oil_sampling_form.html' }
+        ],
+        ptr_buchholz: [
+            { label: 'PTR PTW Template', type: 'PTW', href: 'ptr_ptw_template.html' },
+            { label: 'Buchholz Incident Log', type: 'Form', href: 'buchholz_incident_log.html' }
+        ],
+        domestic_meter: [
+            { label: 'New Connection Checklist', type: 'Checklist', href: 'new_connection_checklist.html' },
+            { label: 'Meter Installation Permit', type: 'Permit Form', href: 'meter_install_permit.html' }
+        ],
+        pin_insulator: [
+            { label: '11kV Isolation PTW', type: 'PTW', href: 'pin_insulator_ptw.html' }
+        ],
+        ug_cable_fault: [
+            { label: 'Cable Fault Localization PTW', type: 'PTW', href: 'cable_fault_ptw.html' },
+            { label: 'Cable Fault Test Report', type: 'Form', href: 'cable_fault_test_report.html' }
+        ]
+    };
+
+    const defaultDownloads = [
+        { label: 'Generic PTW Template', type: 'PTW', href: 'generic_ptw.html' },
+        { label: 'Site Risk Assessment Form', type: 'Checklist', href: 'risk_assessment_form.html' }
     ];
 
     let steps = {};
@@ -931,6 +1323,7 @@
     const criticalKeywords = ['isolation', 'isolate', 'lockout', 'ptw', 'permit to work', '11kv', 'hv', 'high voltage', 'এলটিসি', 'আইসোলেশন', 'উচ্চ ভোল্টেজ'];
     let filterKeywords = [];
     let activeFilters = new Set();
+    const multiSelectHighlights = new Map();
 
     const gameInterface = document.getElementById('game-interface');
     const stepTracker = document.getElementById('step-tracker');
@@ -942,10 +1335,13 @@
     const flowchartTitleEl = document.getElementById('flowchart-title');
     const alertToggleBtn = document.getElementById('alertToggleBtn');
     const alertLabelText = document.getElementById('alertLabelText');
-    const filterPanel = document.getElementById('filter-panel');
-    const filterLauncher = document.getElementById('filter-launcher');
     const filterOptionsEl = document.getElementById('filter-options');
     const filterSummaryEl = document.getElementById('filter-summary');
+    const downloadsListEl = document.getElementById('download-list');
+    const downloadsSummaryEl = document.getElementById('downloads-summary');
+    const utilityMenu = document.getElementById('utility-menu');
+    const utilityToggle = document.getElementById('utility-menu-toggle');
+    const utilityToggleMeta = document.getElementById('utility-toggle-meta');
     const downloadModalEl = document.getElementById('download-modal');
     const downloadMessageEl = document.getElementById('download-message');
     let trailPingTimeout = null;
@@ -965,6 +1361,7 @@
         setAlertButtonState();
         buildFilterKeywords();
         setFilterLauncherState();
+        renderDownloadList();
     }
 
     function renderSopSelection() {
@@ -978,18 +1375,16 @@
         stepTracker.innerText = 'Select an SOP to begin';
         toggleActionButtons(false);
         resetStepHistory();
+        resetMultiSelectHighlights();
         updateFlowchartTitle();
         toggleProgressPanel(false);
         lastAlertedStepKey = null;
 
         const filteredSops = getFilteredSops();
         const cardsHtml = filteredSops.map(sop => {
-            const tags = (sop.tags || []).map(tag => `<span>${tag}</span>`).join('');
             return `
                 <div class="sop-card" onclick="loadSop('${sop.id}')">
                     <h3>${sop.title}</h3>
-                    <p>${sop.summary}</p>
-                    <div class="sop-tags">${tags}</div>
                 </div>`;
         }).join('');
 
@@ -1003,9 +1398,9 @@
 
         gameInterface.innerHTML = `
             <div style="width:100%">
-                <div class="question-text" style="font-size:1.1rem;">কাজ বাছাই করো ⤵</div>
                 ${gridMarkup}
             </div>`;
+        renderDownloadList();
     }
 
     async function loadSop(id) {
@@ -1036,8 +1431,10 @@
             updateFlowchartTitle();
 
             resetStepHistory();
+            resetMultiSelectHighlights();
             renderStep(startNodeKey);
             toggleActionButtons(true);
+            renderDownloadList();
         } catch (error) {
             console.error('Failed to load SOP data:', error);
             gameInterface.innerHTML = `<div class="result-box result-fail">
@@ -1099,8 +1496,17 @@
     }
 
     function setFilterLauncherState() {
-        if (!filterLauncher) return;
-        filterLauncher.classList.toggle('active', activeFilters.size > 0);
+        if (!utilityToggle) return;
+        const hasFilters = activeFilters.size > 0;
+        utilityToggle.classList.toggle('active', hasFilters);
+        if (utilityToggleMeta) {
+            if (hasFilters) {
+                const label = activeFilters.size === 1 ? 'filter on' : 'filters on';
+                utilityToggleMeta.textContent = `${activeFilters.size} ${label}`;
+            } else {
+                utilityToggleMeta.textContent = 'No filters applied';
+            }
+        }
     }
 
     function updateFilterSummary(visibleCount) {
@@ -1123,6 +1529,41 @@
         });
     }
 
+    function getCurrentDownloads() {
+        if (activeSop && downloadCatalog[activeSop.id]) {
+            return downloadCatalog[activeSop.id];
+        }
+        return defaultDownloads;
+    }
+
+    function renderDownloadList() {
+        if (!downloadsListEl) return;
+        const downloads = getCurrentDownloads();
+        if (!downloads.length) {
+            downloadsListEl.innerHTML = '<span class="mini-map-empty">No downloadable templates configured yet.</span>';
+        } else {
+            const cards = downloads.map(item => {
+                const safeLabel = item.label || 'Download';
+                const safeType = item.type ? `<span class="download-meta">${item.type}</span>` : '';
+                const url = item.href || '#';
+                return `
+                    <div class="download-card">
+                        <strong>${safeLabel}</strong>
+                        ${safeType}
+                        <a class="download-link" href="${url}" target="_blank" rel="noopener" download>
+                            ⬇ Download
+                        </a>
+                    </div>`;
+            }).join('');
+            downloadsListEl.innerHTML = cards;
+        }
+        if (downloadsSummaryEl) {
+            const subject = activeSop ? activeSop.title : 'all SOPs';
+            const countLabel = downloads.length === 1 ? 'resource' : 'resources';
+            downloadsSummaryEl.textContent = `${downloads.length} ${countLabel} available for ${subject}`;
+        }
+    }
+
     function toggleProgressPanel(forceState = null) {
         if (!progressPanel || !progressLauncher) return;
         const isOpen = progressPanel.classList.contains('open');
@@ -1133,25 +1574,23 @@
         syncPanelOverlayState();
     }
 
-    function toggleFilterPanel(forceState = null) {
-        if (!filterPanel || !filterLauncher) return;
-        const isOpen = filterPanel.classList.contains('open');
+    function toggleUtilityMenu(forceState = null) {
+        if (!utilityMenu || !utilityToggle) return;
+        const isOpen = utilityMenu.classList.contains('open');
         const shouldOpen = forceState === null ? !isOpen : forceState;
-        filterPanel.classList.toggle('open', shouldOpen);
-        filterPanel.setAttribute('aria-hidden', (!shouldOpen).toString());
-        filterLauncher.classList.toggle('active', shouldOpen);
-        syncPanelOverlayState();
+        utilityMenu.classList.toggle('open', shouldOpen);
+        utilityMenu.setAttribute('aria-hidden', (!shouldOpen).toString());
+        utilityToggle.setAttribute('aria-expanded', shouldOpen.toString());
+        utilityToggle.classList.toggle('menu-open', shouldOpen);
     }
 
     function closeAllPanels() {
         toggleProgressPanel(false);
-        toggleFilterPanel(false);
     }
 
     function syncPanelOverlayState() {
         const isProgressOpen = progressPanel && progressPanel.classList.contains('open');
-        const isFilterOpen = filterPanel && filterPanel.classList.contains('open');
-        const shouldLock = Boolean(isProgressOpen || isFilterOpen);
+        const shouldLock = Boolean(isProgressOpen);
         document.body.classList.toggle('trail-panel-open', shouldLock);
         if (panelOverlay) {
             panelOverlay.classList.toggle('visible', shouldLock);
@@ -1286,6 +1725,11 @@
     }
 
     function renderInteraction(data, key) {
+        if (data.multiSelect && data.multiSelect.enabled) {
+            renderMultiSelectStep(data, key);
+            return;
+        }
+
         let checklistHtml = '';
         let isChecklistStep = false;
 
@@ -1310,12 +1754,7 @@
             // Map generic styles (positive, negative, neutral) to CSS classes
             let btnStyle = opt.style ? `btn-${opt.style}` : 'btn-neutral';
             let btnClass = isChecklistStep ? 'checklist-next-btn ' + btnStyle : btnStyle;
-            const safeResponse = opt.label
-                .replace(/&/g, '&amp;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
+            const safeResponse = escapeAttribute(opt.label);
             optionsHtml += `<button data-response="${safeResponse}" onclick="handleAction('${opt.goto}', this.dataset.response)" class="${btnClass}" ${disabledAttr}>${opt.label}</button>`;
         });
 
@@ -1352,6 +1791,330 @@
             }
         });
     }
+
+    function resetMultiSelectHighlights() {
+        multiSelectHighlights.clear();
+    }
+
+    function getPersistedMultiSelectIndexes(stepKey) {
+        const entry = multiSelectHighlights.get(stepKey);
+        if (!entry || !Array.isArray(entry.indexes)) return [];
+        return entry.indexes
+            .map(idx => Number(idx))
+            .filter(idx => Number.isFinite(idx) && idx >= 0);
+    }
+
+    function syncMultiSelectHighlights(stepKey, stepData, selectedIndexes) {
+        if (!stepKey || !stepData || !Array.isArray(selectedIndexes)) {
+            return;
+        }
+        const actions = Array.isArray(stepData.actions) ? stepData.actions : [];
+        if (!actions.length || !selectedIndexes.length) {
+            multiSelectHighlights.delete(stepKey);
+            return;
+        }
+        const orderedIndexes = selectedIndexes
+            .map(idx => Number(idx))
+            .filter(idx => Number.isFinite(idx) && idx >= 0 && idx < actions.length);
+        if (!orderedIndexes.length) {
+            multiSelectHighlights.delete(stepKey);
+            return;
+        }
+        const seenTargets = new Set();
+        const targets = [];
+        orderedIndexes.forEach(idx => {
+            const action = actions[idx];
+            if (action && action.goto && !seenTargets.has(action.goto)) {
+                seenTargets.add(action.goto);
+                targets.push(action.goto);
+            }
+        });
+        if (!targets.length) {
+            multiSelectHighlights.delete(stepKey);
+            return;
+        }
+        multiSelectHighlights.set(stepKey, {
+            indexes: orderedIndexes,
+            targets
+        });
+    }
+
+    function renderMultiSelectStep(data, key) {
+        const noteHtml = data.note ? `<div class="ostad-note"><strong>ওস্তাদ বলছে:</strong> ${data.note}</div>` : '';
+        const cardsHtml = (data.actions || []).map((opt, index) => {
+            return `
+                <button type="button" class="multi-option-card" data-action-index="${index}" aria-pressed="false">
+                    <span class="multi-option-check"></span>
+                    <div class="multi-option-copy">
+                        <span class="multi-option-title">${escapeHtml(opt.label)}</span>
+                    </div>
+                </button>`;
+        }).join('');
+
+        const ctaLabel = (data.multiSelect && data.multiSelect.ctaLabel) || 'নির্বাচিত সমস্যাগুলো যোগ করো';
+        const planTitle = escapeHtml((data.multiSelect && data.multiSelect.planTitle) || 'Fix plan');
+        const subtitle = escapeHtml((data.multiSelect && data.multiSelect.planSubtitle) || (data.multiSelect && data.multiSelect.emptyState) || 'কমপক্ষে একটি সমস্যা বেছে নাও।');
+        const emptyHintRaw = (data.multiSelect && data.multiSelect.emptyState) || 'উপরের কার্ড থেকে বেছে নাও।';
+        const emptyHint = escapeHtml(emptyHintRaw);
+        const emptyHintAttr = escapeAttribute(emptyHintRaw);
+        const ctaAttr = escapeAttribute(ctaLabel);
+        const safeCta = escapeHtml(ctaLabel);
+
+        gameInterface.innerHTML = `
+            <div class="question-text">${data.content}</div>
+            ${noteHtml}
+            <div class="multi-select-head">
+                <div class="multi-select-counter" id="multi-selection-count">কোনো সমস্যা নির্বাচন করা হয়নি</div>
+                <div class="multi-select-pills" id="multi-selection-pills" data-empty-hint="${emptyHintAttr}" aria-live="polite">
+                    <span class="selection-pill selection-pill--empty">${emptyHint}</span>
+                </div>
+            </div>
+            <div class="multi-select-grid">
+                ${cardsHtml}
+            </div>
+            <button id="multi-plan-build" class="multi-plan-btn" data-cta-label="${ctaAttr}" disabled>${safeCta}</button>
+            <div id="multi-plan-summary" class="multi-plan-summary multi-plan-summary--empty" data-origin-step="${key}">
+                <div class="multi-plan-header">
+                    <div>
+                        <div class="multi-plan-title">${planTitle}</div>
+                        <p class="multi-plan-subtitle">${subtitle}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        initMultiSelectUI(key, data);
+    }
+
+    function initMultiSelectUI(stepKey, stepData) {
+        const persistedSelection = getPersistedMultiSelectIndexes(stepKey);
+        const selection = new Set(persistedSelection);
+        const optionButtons = Array.from(document.querySelectorAll('.multi-option-card'));
+        const buildBtn = document.getElementById('multi-plan-build');
+        const summaryEl = document.getElementById('multi-plan-summary');
+        const pillsWrap = document.getElementById('multi-selection-pills');
+        const counterEl = document.getElementById('multi-selection-count');
+        const emptyHintText = pillsWrap ? (pillsWrap.dataset.emptyHint || 'উপরের কার্ড থেকে বেছে নাও') : 'উপরের কার্ড থেকে বেছে নাও';
+        const baseCta = buildBtn ? (buildBtn.dataset.ctaLabel || buildBtn.textContent || '') : '';
+
+        const reflectCardStates = () => {
+            optionButtons.forEach(btn => {
+                const idx = Number(btn.dataset.actionIndex);
+                const isSelected = selection.has(idx);
+                btn.classList.toggle('selected', isSelected);
+                btn.setAttribute('aria-pressed', isSelected.toString());
+            });
+        };
+
+        const syncButtonState = selectedCount => {
+            if (!buildBtn) return;
+            const count = typeof selectedCount === 'number' ? selectedCount : selection.size;
+            buildBtn.disabled = count === 0;
+            const suffix = count ? ` (${count})` : '';
+            const baseLabel = baseCta || buildBtn.textContent || '';
+            buildBtn.textContent = `${baseLabel}${suffix}`;
+        };
+
+        const renderSelectionPills = selectedIndexes => {
+            if (!pillsWrap) return;
+            if (!selectedIndexes.length) {
+                pillsWrap.innerHTML = `<span class="selection-pill selection-pill--empty">${escapeHtml(emptyHintText)}</span>`;
+                return;
+            }
+            const markup = selectedIndexes.map(idx => {
+                const action = (stepData.actions || [])[idx];
+                const rawLabel = action ? action.label : `Option ${idx + 1}`;
+                const label = escapeHtml(rawLabel);
+                const aria = escapeAttribute(`${rawLabel} সরানো হবে`);
+                return `<span class="selection-pill">
+                    <span>${label}</span>
+                    <button type="button" class="selection-pill-remove" data-pill-index="${idx}" aria-label="${aria}">✕</button>
+                </span>`;
+            }).join('');
+            pillsWrap.innerHTML = markup;
+        };
+
+        const updateSelectionSummary = () => {
+            const selectedIndexes = Array.from(selection.values());
+            if (counterEl) {
+                counterEl.textContent = selectedIndexes.length
+                    ? `${selectedIndexes.length} টি সমস্যা নির্বাচন করা হয়েছে`
+                    : 'কোনো সমস্যা নির্বাচন করা হয়নি';
+            }
+            renderSelectionPills(selectedIndexes);
+            reflectCardStates();
+            syncButtonState(selectedIndexes.length);
+            syncMultiSelectHighlights(stepKey, stepData, selectedIndexes);
+        };
+
+        optionButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = Number(btn.dataset.actionIndex);
+                if (selection.has(idx)) {
+                    selection.delete(idx);
+                } else {
+                    selection.add(idx);
+                }
+                updateSelectionSummary();
+            });
+        });
+
+        if (pillsWrap) {
+            pillsWrap.addEventListener('click', event => {
+                const removeBtn = event.target.closest('.selection-pill-remove');
+                if (!removeBtn) return;
+                const idx = Number(removeBtn.dataset.pillIndex);
+                if (!Number.isFinite(idx)) return;
+                if (selection.has(idx)) {
+                    selection.delete(idx);
+                    updateSelectionSummary();
+                }
+            });
+        }
+
+        if (buildBtn) {
+            buildBtn.addEventListener('click', () => {
+                const selectedIndexes = Array.from(selection.values());
+                buildMultiSelectPlan(stepKey, stepData, selectedIndexes, summaryEl);
+            });
+        }
+
+        if (summaryEl) {
+            summaryEl.addEventListener('click', event => {
+                const proceedBtn = event.target.closest('.multi-plan-proceed');
+                if (proceedBtn) {
+                    const nextKey = proceedBtn.dataset.planProceed;
+                    const nextLabel = proceedBtn.dataset.planLabel || 'Proceed';
+                    handleAction(nextKey, nextLabel);
+                }
+            });
+        }
+
+        updateSelectionSummary();
+    }
+
+    function buildMultiSelectPlan(stepKey, stepData, selectedIndexes, summaryEl) {
+        if (!summaryEl) return;
+        syncMultiSelectHighlights(stepKey, stepData, selectedIndexes || []);
+        if (!selectedIndexes.length) {
+            const fallbackTitle = escapeHtml((stepData.multiSelect && stepData.multiSelect.planTitle) || 'Fix plan');
+            const fallbackSubtitle = escapeHtml((stepData.multiSelect && stepData.multiSelect.emptyState) || 'কমপকষ একট সমসয বছ নও');
+            summaryEl.classList.add('multi-plan-summary--empty');
+            summaryEl.innerHTML = `<div class="multi-plan-header"><div><div class="multi-plan-title">${fallbackTitle}</div><p class="multi-plan-subtitle">${fallbackSubtitle}</p></div></div>`;
+            return;
+        }
+
+        const planTitle = escapeHtml((stepData.multiSelect && stepData.multiSelect.planTitle) || 'Fix plan');
+        const planSubtitle = escapeHtml((stepData.multiSelect && stepData.multiSelect.planSubtitle) || '');
+        
+        // Track completion
+        if (!summaryEl.completedProblems) {
+            summaryEl.completedProblems = new Set();
+        }
+        
+        const completedCount = summaryEl.completedProblems.size;
+        const countLabel = completedCount > 0 
+            ? `${selectedIndexes.length} ট সমসয (${completedCount} ট সমপনন)`
+            : `${selectedIndexes.length} ট সমসয`;
+
+        const cardsHtml = selectedIndexes.map((idx, cardIndex) => {
+            const action = (stepData.actions || [])[idx];
+            if (!action) return '';
+            const targetStep = steps[action.goto];
+            const problemId = `problem-${stepKey}-${idx}`;
+            const isCompleted = summaryEl.completedProblems.has(problemId);
+            
+            if (!targetStep) {
+                return `<article class="multi-plan-card ${isCompleted ? 'completed' : ''}" data-problem-id="${problemId}">
+                    <h4>${escapeHtml(action.label)} ${isCompleted ? '<span style="color: var(--success-color);"></span>' : ''}</h4>
+                    <p class="multi-plan-body">এই রটর জনয ডটইলস পওয যযন</p>
+                </article>`;
+            }
+
+            // Show the solution inline
+            let solutionSection = '';
+            if (targetStep.actions && targetStep.actions.length > 0) {
+                const solutionSteps = targetStep.actions.map((act, actIdx) => {
+                    const solStep = steps[act.goto];
+                    if (solStep && solStep.type === 'result') {
+                        const resultClass = solStep.status === 'success' ? 'result-success' : 'result-fail';
+                        return `<div class="result-box ${resultClass}" style="margin-top: 12px; padding: 12px; font-size: 0.9rem;">
+                            <strong>${solStep.title || act.label}</strong>
+                            <p style="margin: 8px 0 0;">${solStep.content || ''}</p>
+                        </div>`;
+                    }
+                    return '';
+                }).filter(s => s).join('');
+                
+                if (solutionSteps) {
+                    solutionSection = `<div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgba(0,0,0,0.1);">
+                        <div style="font-size: 0.85rem; font-weight: 600; color: var(--accent-color); margin-bottom: 8px;">সমধন:</div>
+                        ${solutionSteps}
+                        <button class="problem-done-btn" data-problem-id="${problemId}" style="margin-top: 12px; padding: 8px 16px; background: ${isCompleted ? 'var(--success-color)' : 'var(--primary-color)'}; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                            ${isCompleted ? ' সমপনন হযছ' : 'সমপনন কর'}
+                        </button>
+                    </div>`;
+                }
+            }
+
+            const noteSection = targetStep.note ? `<p class="multi-plan-note"><strong>নট:</strong> ${targetStep.note}</p>` : '';
+            const checklistSection = Array.isArray(targetStep.checklist) && targetStep.checklist.length
+                ? `<div style="margin-top: 10px;"><strong style="font-size: 0.9rem;">চকলসট:</strong><ul class="multi-plan-list">${targetStep.checklist.map(item => `<li>${item}</li>`).join('')}</ul></div>`
+                : '';
+
+            return `<article class="multi-plan-card ${isCompleted ? 'completed' : ''}" data-problem-id="${problemId}" style="${isCompleted ? 'opacity: 0.7; background: rgba(39,174,96,0.05);' : ''}">
+                <h4>${escapeHtml(action.label)} ${isCompleted ? '<span style="color: var(--success-color);"></span>' : ''}</h4>
+                <div class="multi-plan-body">${targetStep.content || ''}</div>
+                ${noteSection}
+                ${checklistSection}
+                ${solutionSection}
+            </article>`;
+        }).join('');
+
+        const allCompleted = summaryEl.completedProblems.size === selectedIndexes.length;
+        const proceedSection = (stepData.multiSelect && stepData.multiSelect.proceedTo)
+            ? (() => {
+                const rawLabel = stepData.multiSelect.proceedLabel || 'Proceed';
+                const safeLabel = escapeHtml(rawLabel);
+                const safeAttrLabel = escapeAttribute(rawLabel);
+                return `<div class="multi-plan-footer">
+                        <button class="multi-plan-proceed" data-plan-proceed="${stepData.multiSelect.proceedTo}" data-plan-label="${safeAttrLabel}" ${allCompleted ? '' : 'disabled'} style="${allCompleted ? '' : 'opacity: 0.5; cursor: not-allowed;'}">
+                            ${safeLabel} ${allCompleted ? '' : `(${summaryEl.completedProblems.size}/${selectedIndexes.length})`}
+                        </button>
+                   </div>`;
+            })()
+            : '';
+
+        summaryEl.classList.remove('multi-plan-summary--empty');
+        summaryEl.innerHTML = `
+            <div class="multi-plan-header">
+                <div>
+                    <div class="multi-plan-title">${planTitle}</div>
+                    ${planSubtitle ? `<p class="multi-plan-subtitle">${planSubtitle}</p>` : ''}
+                </div>
+                <span class="multi-plan-count">${countLabel}</span>
+            </div>
+            <div class="multi-plan-cards">
+                ${cardsHtml}
+            </div>
+            ${proceedSection}
+        `;
+        
+        // Add event listeners for done buttons
+        summaryEl.querySelectorAll('.problem-done-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const problemId = btn.dataset.problemId;
+                if (summaryEl.completedProblems.has(problemId)) {
+                    summaryEl.completedProblems.delete(problemId);
+                } else {
+                    summaryEl.completedProblems.add(problemId);
+                }
+                // Rebuild the plan to reflect changes
+                buildMultiSelectPlan(stepKey, stepData, selectedIndexes, summaryEl);
+            });
+        });
+    }
+
 
     function renderResult(data) {
         const resultClass = data.status === 'success' ? 'result-success' : 'result-fail';
@@ -1450,6 +2213,7 @@
     function restartCurrentSop() {
         if (!activeSop) return;
         resetStepHistory();
+        resetMultiSelectHighlights();
         lastAlertedStepKey = null;
         renderStep(startNodeKey);
     }
@@ -1457,6 +2221,8 @@
     function handleAction(targetKey, responseLabel) {
         renderStep(targetKey, false, responseLabel || null);
     }
+
+
 
     // Flowchart Logic
     function showFlowchart() {
@@ -1493,6 +2259,7 @@
         graph += "classDef fail fill:#f8d7da,stroke:#721c24,stroke-width:2px;\n";
         graph += "classDef start fill:#e67e22,stroke:#d35400,color:white;\n";
         graph += "classDef activeNode stroke:#e67e22,stroke-width:3px;\n";
+        graph += "classDef pendingNode fill:#fffaf3,stroke:#e67e22,stroke-width:2px,stroke-dasharray:6 4;\n";
 
         let entries = Object.entries(stepsData);
         // Ensure start node is first
@@ -1532,22 +2299,23 @@
             graph += edge.line + "\n";
         });
 
-        if (stepHistory.length) {
-            const visited = new Set(stepHistory.map(entry => entry.key));
-            visited.forEach(key => {
+        const visitedNodes = new Set(stepHistory.map(entry => entry.key));
+        const highlightedEdgeIdx = new Set();
+
+        if (visitedNodes.size) {
+            visitedNodes.forEach(key => {
                 graph += `class ${key} activeNode;\n`;
             });
 
-            const highlightedEdgeIdx = [];
             for (let i = 1; i < stepHistory.length; i++) {
                 const prev = stepHistory[i - 1].key;
                 const curr = stepHistory[i].key;
-                const idx = edgeStatements.findIndex((edge, edgeIdx) => {
-                    if (highlightedEdgeIdx.includes(edgeIdx)) return false;
+                const idx = edgeStatements.findIndex((edge, candidateIdx) => {
+                    if (highlightedEdgeIdx.has(candidateIdx)) return false;
                     return edge.from === prev && edge.to === curr;
                 });
                 if (idx > -1) {
-                    highlightedEdgeIdx.push(idx);
+                    highlightedEdgeIdx.add(idx);
                 }
             }
 
@@ -1556,7 +2324,59 @@
             });
         }
 
+        if (multiSelectHighlights.size) {
+            const pendingEdgeIdx = new Set();
+            multiSelectHighlights.forEach((entry, parentKey) => {
+                if (!entry || !Array.isArray(entry.targets)) return;
+                entry.targets.forEach(targetKey => {
+                    if (!targetKey || !stepsData[targetKey]) return;
+                    if (!visitedNodes.has(targetKey)) {
+                        graph += `class ${targetKey} pendingNode;\n`;
+                    } else {
+                        graph += `class ${targetKey} activeNode;\n`;
+                    }
+                    const idx = edgeStatements.findIndex((edge, candidateIdx) => {
+                        if (highlightedEdgeIdx.has(candidateIdx) || pendingEdgeIdx.has(candidateIdx)) return false;
+                        return edge.from === parentKey && edge.to === targetKey;
+                    });
+                    if (idx > -1) {
+                        pendingEdgeIdx.add(idx);
+                    }
+                });
+            });
+
+            pendingEdgeIdx.forEach(idx => {
+                graph += `linkStyle ${idx} stroke:#e67e22,stroke-width:2px,stroke-dasharray:6 4;\n`;
+            });
+        }
+
         return graph;
+    }
+
+    function getStepPreview(targetKey) {
+        const target = steps[targetKey];
+        if (!target) return '';
+        const previewText = target.note || target.content || target.title || '';
+        return truncateText(stripHtml(previewText), 80);
+    }
+
+    function stripHtml(text = '') {
+        return String(text).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function truncateText(text = '', limit = 80) {
+        if (!text) return '';
+        const normalized = String(text);
+        return normalized.length > limit ? normalized.substring(0, limit).trim() + '…' : normalized;
+    }
+
+    function escapeHtml(text = '') {
+        return String(text).replace(/[&<>]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[char] || char);
+    }
+
+    function escapeAttribute(text = '') {
+        const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+        return String(text).replace(/[&<>"']/g, char => entities[char] || char);
     }
 
     function downloadFlowchartPDF() {

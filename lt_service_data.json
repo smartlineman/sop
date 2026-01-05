@@ -30,7 +30,14 @@
     },
     "pillar_trip_reason": {
       "type": "interaction",
-      "content": "কেন MCCB ট্রিপ করল?",
+      "content": "MCCB ট্রিপের কী কী কারণ দেখতে পাচ্ছ? (একাধিক হলে সব বেছে নাও)",
+      "multiSelect": {
+        "enabled": true,
+        "ctaLabel": "সমস্যাগুলো ঠিক করো",
+        "planTitle": "পিলার বক্স রিপেয়ার প্ল্যান",
+        "planSubtitle": "সব সমস্যা সমাধান করে IR টেস্ট করো",
+        "emptyState": "কোনো সমস্যা নির্বাচন করা হয়নি"
+      },
       "actions": [
         { "label": "লুজ/বার্ন্ট লুগ", "goto": "lug_repair", "style": "neutral" },
         { "label": "আউটগোয়িং কেবল শর্ট", "goto": "repair_ug_joint", "style": "negative" },
@@ -72,8 +79,15 @@
     },
     "walk_the_line": {
       "type": "interaction",
-      "content": "পিলার থেকে গ্রাহক পর্যন্ত কন্ডাক্টর/সার্ভিস প্যাট্রোল করো।",
-      "note": "সানলাইটে হেয়ারলাইন ব্রেক দেখা যায় না, হাত দিয়ে স্পর্শ করো না।",
+      "content": "পিলার থেকে গ্রাহক পর্যন্ত কন্ডাক্টর/সার্ভিস প্যাট্রোল করো। কী কী সমস্যা পেলে?",
+      "note": "সানলাইটে হেয়ারলাইন ব্রেক দেখা যায় না, হাত দিয়ে স্পর্শ করো না।",
+      "multiSelect": {
+        "enabled": true,
+        "ctaLabel": "সমস্যাগুলো সারাও",
+        "planTitle": "সার্ভিস লাইন রিপেয়ার প্ল্যান",
+        "planSubtitle": "সব সমস্যা ঠিক করে রি-এনার্জাইজ করো",
+        "emptyState": "কোনো সমস্যা নির্বাচন করা হয়নি"
+      },
       "actions": [
         { "label": "সার্ভিস তার ছিঁড়ে গেছে", "goto": "replace_service", "style": "neutral" },
         { "label": "নিউট্রাল খোলা", "goto": "neutral_fix", "style": "neutral" },
