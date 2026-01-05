@@ -1246,15 +1246,7 @@
         </div>
     </div>
 
-    <!-- Load SOP configuration from external module -->
-    <script src="js/config.js"></script>
-
     <script>
-        // Configuration loaded from js/config.js
-        // Available as: sopCatalog, downloadCatalog, defaultDownloads
-
-        // sopCatalog now loaded from js/config.js
-        /*
         const sopCatalog = [
             {
                 id: 'general_sop',
@@ -1339,10 +1331,7 @@
                 icon: '🔍'
             }
         ];
-        */
 
-        // downloadCatalog now loaded from js/config.js
-        /*
         const downloadCatalog = {
             general_sop: [
                 { label: 'General PTW Form', type: 'PTW', href: 'generic_ptw.html' },
@@ -1384,7 +1373,6 @@
             { label: 'Generic PTW Template', type: 'PTW', href: 'generic_ptw.html' },
             { label: 'Site Risk Assessment Form', type: 'Checklist', href: 'risk_assessment_form.html' }
         ];
-        */
 
         let steps = {};
         let startNodeKey = 'start';
@@ -2111,7 +2099,7 @@
                 </article>`;
                 }
 
-                // Show the solution inline and completion button
+                // Show the solution inline
                 let solutionSection = '';
                 if (targetStep.actions && targetStep.actions.length > 0) {
                     const solutionSteps = targetStep.actions.map((act, actIdx) => {
@@ -2126,13 +2114,15 @@
                         return '';
                     }).filter(s => s).join('');
 
-                    // Always show completion button for problems with actions
-                    solutionSection = `<div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgba(0,0,0,0.1);">
-                        ${solutionSteps ? `<div style="font-size: 0.85rem; font-weight: 600; color: var(--accent-color); margin-bottom: 8px;">সমাধান:</div>${solutionSteps}` : ''}
+                    if (solutionSteps) {
+                        solutionSection = `<div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgba(0,0,0,0.1);">
+                        <div style="font-size: 0.85rem; font-weight: 600; color: var(--accent-color); margin-bottom: 8px;">সমধন:</div>
+                        ${solutionSteps}
                         <button class="problem-done-btn" data-problem-id="${problemId}" style="margin-top: 12px; padding: 8px 16px; background: ${isCompleted ? 'var(--success-color)' : 'var(--primary-color)'}; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
-                            ${isCompleted ? '✓ সম্পন্ন হয়েছে' : 'সম্পন্ন করুন'}
+                            ${isCompleted ? ' সমপনন হযছ' : 'সমপনন কর'}
                         </button>
                     </div>`;
+                    }
                 }
 
                 const noteSection = targetStep.note ? `<p class="multi-plan-note"><strong>নট:</strong> ${targetStep.note}</p>` : '';
