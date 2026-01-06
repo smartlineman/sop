@@ -1252,6 +1252,10 @@
     <script>
         // Configuration loaded from js/config.js
         // Available as: sopCatalog, downloadCatalog, defaultDownloads
+        const sopCatalog = window.sopCatalog || [];
+        const downloadCatalog = window.downloadCatalog || {};
+        const defaultDownloads = window.defaultDownloads || [];
+        const sopBlueprint = window.sopBlueprint || null;
 
         // sopCatalog now loaded from js/config.js
         /*
@@ -1390,6 +1394,8 @@
         let startNodeKey = 'start';
         let activeSop = null;
         let stepHistory = [];
+        let flowHistory = [];
+        let stepSequenceCounter = 0;
         let activeSopDisplayTitle = '';
         let alertsEnabled = false;
         let lastAlertedStepKey = null;
@@ -1830,10 +1836,12 @@
 
             let optionsHtml = '';
             data.actions.forEach(opt => {
-                let disabledAttr = isChecklistStep ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : '';
+                const requiresChecklist = isChecklistStep && !opt.bypassChecklist;
+                const disabledAttr = requiresChecklist ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : '';
+                const extraClass = requiresChecklist ? 'checklist-next-btn ' : '';
                 // Map generic styles (positive, negative, neutral) to CSS classes
-                let btnStyle = opt.style ? `btn-${opt.style}` : 'btn-neutral';
-                let btnClass = isChecklistStep ? 'checklist-next-btn ' + btnStyle : btnStyle;
+                const btnStyle = opt.style ? `btn-${opt.style}` : 'btn-neutral';
+                const btnClass = `${extraClass}${btnStyle}`.trim();
                 const safeResponse = escapeAttribute(opt.label);
                 optionsHtml += `<button data-response="${safeResponse}" onclick="handleAction('${opt.goto}', this.dataset.response)" class="${btnClass}" ${disabledAttr}>${opt.label}</button>`;
             });
@@ -2219,7 +2227,10 @@
 
             const label = deriveStepLabel(stepKey, stepData);
             const timestamp = new Date().toISOString();
-            stepHistory.push({ key: stepKey, label, response: responseLabel, timestamp });
+            const seq = ++stepSequenceCounter;
+            const entry = { key: stepKey, label, response: responseLabel, timestamp, seq };
+            stepHistory.push(entry);
+            flowHistory.push(entry);
             const MAX_TRAIL = 8;
             if (stepHistory.length > MAX_TRAIL) {
                 stepHistory = stepHistory.slice(stepHistory.length - MAX_TRAIL);
@@ -2275,6 +2286,8 @@
 
         function resetStepHistory() {
             stepHistory = [];
+            flowHistory = [];
+            stepSequenceCounter = 0;
             updateMiniMap();
             if (progressLauncher) {
                 progressLauncher.classList.remove('ping');
@@ -2284,6 +2297,11 @@
         function jumpToStep(index) {
             if (index < 0 || index >= stepHistory.length) return;
             const target = stepHistory[index];
+            if (target && typeof target.seq === 'number') {
+                flowHistory = flowHistory.filter(entry => entry.seq <= target.seq);
+            } else {
+                flowHistory = stepHistory.slice(0, index + 1);
+            }
             stepHistory = stepHistory.slice(0, index + 1);
             renderStep(target.key, true, target.response || null);
         }
@@ -2377,7 +2395,8 @@
                 graph += edge.line + "\n";
             });
 
-            const visitedNodes = new Set(stepHistory.map(entry => entry.key));
+            const pathHistory = flowHistory.length ? flowHistory : stepHistory;
+            const visitedNodes = new Set(pathHistory.map(entry => entry.key));
             const highlightedEdgeIdx = new Set();
 
             if (visitedNodes.size) {
@@ -2385,9 +2404,9 @@
                     graph += `class ${key} activeNode;\n`;
                 });
 
-                for (let i = 1; i < stepHistory.length; i++) {
-                    const prev = stepHistory[i - 1].key;
-                    const curr = stepHistory[i].key;
+                for (let i = 1; i < pathHistory.length; i++) {
+                    const prev = pathHistory[i - 1].key;
+                    const curr = pathHistory[i].key;
                     const idx = edgeStatements.findIndex((edge, candidateIdx) => {
                         if (highlightedEdgeIdx.has(candidateIdx)) return false;
                         return edge.from === prev && edge.to === curr;

@@ -1,132 +1,347 @@
 {
     "meta": {
+        "schemaVersion": "2026.01",
+        "sopId": "general_sop",
         "appTitle": "General Electrical SOP",
         "appSubtitle": "সার্বজনীন ইলেক্ট্রিক্যাল ওয়ার্ক গাইড",
-        "startNode": "start"
+        "description": "Universal baseline SOP for Indian distribution utilities covering PPE, PTW, shutdown discipline, isolation, restoration and crew confirmations.",
+        "startNode": "STEP_010_PPE_GATE",
+        "owner": "Distribution Field Ops",
+        "lastReviewed": "2026-01-06",
+        "outcomes": {
+            "success": "STEP_900_SUCCESS",
+            "fail": "STEP_025_PTW_BLOCK"
+        }
     },
     "steps": {
-        "start": {
+        "STEP_010_PPE_GATE": {
+            "id": "STEP-010",
             "type": "interaction",
+            "phase": "Safety Gate",
+            "title": "PPE Readiness",
             "content": "যেকোনো ইলেক্ট্রিক্যাল কাজ শুরু করার আগে নিজের সুরক্ষা নিশ্চিত করো। <br>ব্যক্তিগত সুরক্ষা সরঞ্জাম (PPE) নিয়েছ?",
-            "note": "সুরক্ষা সবার আগে। নিচের বিষয়গুলো যাচাই করো:",
+            "note": "সুরক্ষা সবার আগে। ইনসুলেটেড ম্যাট শুধুমাত্র কন্ট্রোল রুম বা ইনডোর প্যানেল কাজের সময় ব্যবহার বাধ্যতামূলক; আউটডোরে প্রযোজ্য নয়। নিচের বিষয়গুলো যাচাই করো:",
             "checklist": [
                 "সেফটি হেলমেট (Helmet)",
                 "ইন্সুলিয়েটেড গ্লাভস (11kV/LT Gloves)",
                 "সেফটি জুতো (Safety Shoes)",
-                "রিফ্লেক্টিভ জ্যাকেট (Reflective Jacket)"
+                "রিফ্লেক্টিভ জ্যাকেট (Reflective Jacket)",
+                "আর্ক-ফ্ল্যাশ শিল্ড (১১কেভি কাজ হলে)",
+                "[ইনডোর] ইনসুলেটেড ম্যাট",
+                "শর্ট সার্কিট ক্ল্যাম্প / রেস্কিউ হুক"
             ],
             "actions": [
                 {
+                    "responseCode": "010-PPE-OK",
                     "label": "হ্যাঁ, PPE রেডি",
-                    "goto": "ptw_check",
+                    "goto": "STEP_020_PTW_GATE",
                     "style": "positive"
                 }
             ]
         },
-        "ptw_check": {
+        "STEP_020_PTW_GATE": {
+            "id": "STEP-020",
             "type": "interaction",
-            "content": "পারমিট-টু-ওয়ার্ক (PTW) কী অবস্থা?",
-            "note": "অনুমতি ছাড়া লাইনে হাত দেওয়া দণ্ডনীয় অপরাধ এবং ঝুঁকিপূর্ণ।",
+            "phase": "Permit Control",
+            "title": "PTW Confirmation",
+            "content": "PTW ছাড়া কাজ শুরু করা যাবে না। কন্ট্রোল রুম থেকে লিখিত/ডিজিটাল পারমিট পেয়েছ?",
+            "note": "পারমিটে কাজের স্কোপ, লোকেশন, সময়সীমা এবং দায়িত্বরত সুপারভাইজারের সিগনেচার থাকতে হবে।",
+            "checklist": [
+                "পারমিট নম্বর নথিভুক্ত",
+                "লাইভ সিঙ্গেল লাইন ডায়াগ্রাম রেফারেন্স",
+                "যোগাযোগ চ্যানেল টেস্ট (VHF/মোবাইল)",
+                "ডেঞ্জার নোট ও সেফটি অবজারভেশন পড়া"
+            ],
             "actions": [
                 {
-                    "label": "PTW রিসিভ করেছি (Signed)",
-                    "goto": "isolation_process",
+                    "responseCode": "020-PTW-SIGNED",
+                    "label": "PTW রিসিভ করেছি",
+                    "goto": "STEP_030_SD_REQUEST",
                     "style": "positive"
                 },
                 {
-                    "label": "PTW ছাড়া কাজ করছি (Emergency)",
-                    "goto": "isolation_process",
+                    "responseCode": "020-PTW-MISSING",
+                    "label": "PTW মেলেনি - কাজ থামাও",
+                    "goto": "STEP_025_PTW_BLOCK",
+                    "style": "negative",
+                    "bypassChecklist": true
+                }
+            ]
+        },
+        "STEP_025_PTW_BLOCK": {
+            "id": "STEP-025",
+            "type": "result",
+            "status": "fail",
+            "title": "🚫 PTW অনুপস্থিত",
+            "content": "পারমিট ছাড়া কাজ করা যাবে না। কন্ট্রোল রুম/সুপারভাইজারের সাথে আলোচনা করে বৈধ PTW সংগ্রহ করো অথবা কাজ বাতিল করো।"
+        },
+        "STEP_030_SD_REQUEST": {
+            "id": "STEP-030",
+            "type": "interaction",
+            "phase": "Shutdown",
+            "title": "Shutdown আবেদন",
+            "content": "কন্ট্রোল রুমের সাথে যোগাযোগ করে প্রয়োজনীয় ফিডার বা জোনের জন্য শাটডাউন চাও।",
+            "note": "ফিডার নম্বর, আইসোলেশন পয়েন্ট এবং আনুমানিক কাজের সময় উল্লেখ করতে ভুলবে না।",
+            "actions": [
+                {
+                    "responseCode": "030-SD-ASKED",
+                    "label": "শাটডাউন আবেদন পাঠানো",
+                    "goto": "STEP_040_SD_CONFIRM",
                     "style": "neutral"
                 }
             ]
         },
-        "isolation_process": {
+        "STEP_040_SD_CONFIRM": {
+            "id": "STEP-040",
             "type": "interaction",
-            "content": "আইসোলেশন (Isolation): সব সম্ভাব্য পাওয়ার সোর্স থেকে বিচ্ছিন্ন করো।",
-            "note": "বিচ্ছিন্ন করার সময় নিচের চেকলিস্ট ফলো করো:",
-            "checklist": [
-                "মেইন সুইচ / VCB / OCB অফ করেছি",
-                "লিঙ্ক / ফিউজ / DO ব্যারেল খুলেছি",
-                "ব্যাক-ফিড (DG/Inverter) সোর্স চেক করেছি",
-                "কন্ট্রোল প্যানেল লক (LOTO) করেছি"
-            ],
+            "phase": "Shutdown",
+            "title": "Shutdown নিশ্চিতকরণ",
+            "content": "কন্ট্রোল রুম নিশ্চিত করেছে যে নির্দিষ্ট ফিডার/বেয় অফ অবস্থায় আছে?",
+            "note": "SCADA / রিলে রিডিং এবং মাঠের ভোল্টেজ টেস্ট মিলিয়ে নিশ্চিত হও।",
             "actions": [
                 {
-                    "label": "আইসোলেশন কমপ্লিট",
-                    "goto": "discharge_earth",
+                    "responseCode": "040-SD-OK",
+                    "label": "শাটডাউন কনফার্ম",
+                    "goto": "STEP_050_ISOLATION_BOUNDARY",
                     "style": "positive"
                 }
             ]
         },
-        "discharge_earth": {
+        "STEP_050_ISOLATION_BOUNDARY": {
+            "id": "STEP-050",
             "type": "interaction",
-            "content": "ডিসচার্জ এবং আর্থিং (Discharge & Earthing)",
-            "note": "লাইনে জমে থাকা চার্জ বের করে দেওয়া এবং আর্থ করা বাধ্যতামূলক।",
+            "phase": "Isolation",
+            "title": "Working Zone Isolation",
+            "flags": ["critical"],
+            "content": "কাজের জোনের উভয় প্রান্তে DO/লিঙ্ক/সুইচ খুলে ভৌতিক বিচ্ছিন্নতা তৈরি করো।",
             "checklist": [
-                "ডিসচার্জ রড দিয়ে ভোল্টেজ শূন্য করেছি",
-                "সব ফেজে টেম্পোরারি আর্থিং লাগিয়েছি",
-                "আর্থিং ক্ল্যাম্প টাইট আছে"
+                "ইনকামিং ও আউটগোয়িং দুই প্রান্ত বিচ্ছিন্ন",
+                "পোর্টেবল আর্থ সুইচ বা আর্ক হর্ন খোলা",
+                "ডেঞ্জার ট্যাগ ঝুলানো",
+                "লকআউট ডিভাইস লাগানো"
             ],
             "actions": [
                 {
-                    "label": "লাইন সেফ, কাজ শুরু করো",
-                    "goto": "work_execution",
+                    "responseCode": "050-ISOLATED",
+                    "label": "জোন আইসোলেটেড",
+                    "goto": "STEP_060_SD_WITHDRAW_TAGGING",
+                    "style": "positive"
+                }
+            ]
+        },
+        "STEP_060_SD_WITHDRAW_TAGGING": {
+            "id": "STEP-060",
+            "type": "interaction",
+            "phase": "Isolation",
+            "title": "S/D Tagging & Log",
+            "content": "লক-আউট/ট্যাগ-আউট (LOTO) লগ পূরণ করো এবং ফিল্ডে ডেঞ্জার সাইনেজ সেটাপ করো।",
+            "checklist": [
+                "LOTO লগবুকে এন্ট্রি",
+                "ডিউটিরত সুপারভাইজার সাইন",
+                "সাইটে সতর্কীকরণ ফিতা / বলার্ড",
+                "সংকেত বাতি বা ফ্ল্যাশার চালু"
+            ],
+            "actions": [
+                {
+                    "responseCode": "060-TAGGED",
+                    "label": "ট্যাগিং সম্পন্ন",
+                    "goto": "STEP_070_DISCHARGE",
                     "style": "neutral"
                 }
             ]
         },
-        "work_execution": {
+        "STEP_070_DISCHARGE": {
+            "id": "STEP-070",
             "type": "interaction",
-            "content": "বর্তমানে কাজ (Actual Work) চলছে...",
-            "note": "কাজের সময় সতর্কতা অবলম্বন করো এবং ভালো মেটেরিয়াল ব্যবহার করো।",
+            "phase": "Earthing",
+            "title": "Discharge Test",
+            "flags": ["critical"],
+            "content": "ডিসচার্জ রড দিয়ে লাইনে জমে থাকা চার্জ বের করো এবং টেস্ট পেন দিয়ে শূন্য ভোল্টেজ নিশ্চিত করো।",
             "actions": [
                 {
-                    "label": "কাজ শেষ হয়েছে ✅",
-                    "goto": "sd_withdrawal",
+                    "responseCode": "070-DISCHARGED",
+                    "label": "চালকতা নেই নিশ্চিত",
+                    "goto": "STEP_080_TEMP_EARTH",
                     "style": "positive"
                 }
             ]
         },
-        "sd_withdrawal": {
+        "STEP_080_TEMP_EARTH": {
+            "id": "STEP-080",
             "type": "interaction",
-            "content": "শাট-ডাউন উইথড্রয়াল (S/D Withdrawal)",
-            "note": "লাইন চার্জ করার আগে এরিয়া ক্লিয়ার করতে হবে।",
+            "phase": "Earthing",
+            "title": "Temporary Earthing",
+            "content": "কাজের জোনের দুই প্রান্তে এবং প্রয়োজনে মধ্যভাগে টেম্পোরারি আর্থিং লাগাও।",
             "checklist": [
-                "সব টুলস এবং বাড়তি মেটেরিয়াল সরিয়েছি",
-                "লোকজন লাইন থেকে নিচে নেমেছে",
-                "টেম্পোরারি আর্থিং খুলেছি"
+                "সব ফেজে আর্থিং",
+                "আর্থ ক্ল্যাম্প টাইট",
+                "দৃশ্যমান আর্থিং ফিতা",
+                "আর্থিং রেজিস্টার আপডেট"
             ],
             "actions": [
                 {
-                    "label": "উইথড্রয়াল কমপ্লিট",
-                    "goto": "restoration_process",
+                    "responseCode": "080-EARTHED",
+                    "label": "আর্থিং প্রস্তুত",
+                    "goto": "STEP_090_WORK_BRIEF",
                     "style": "positive"
                 }
             ]
         },
-        "restoration_process": {
+        "STEP_090_WORK_BRIEF": {
+            "id": "STEP-090",
             "type": "interaction",
-            "content": "রিস্টোরেশন এবং চার্জিং (Restoration & Charging)",
-            "note": "ধাপে ধাপে লাইন চার্জ করো:",
+            "phase": "Pre-Work",
+            "title": "Crew Briefing",
+            "content": "সম্পূর্ণ টিমকে কাজের ধাপ, দায়িত্ব ও জরুরি সিগন্যাল রিভিউ করাও।",
+            "actions": [
+                {
+                    "responseCode": "090-BRIEFED",
+                    "label": "ব্রিফিং সম্পন্ন",
+                    "goto": "STEP_100_WORK_WINDOW",
+                    "style": "neutral"
+                }
+            ]
+        },
+        "STEP_100_WORK_WINDOW": {
+            "id": "STEP-100",
+            "type": "interaction",
+            "phase": "Work",
+            "title": "Work Execution Window",
+            "content": "এখন জব-স্পেসিফিক কাজ সম্পন্ন করো।",
+            "note": "এই ধাপে কাজের প্রকৃতি অনুযায়ী একাধিক সাব-গাইড থাকতে পারে (উন্নত SOP-এ কাস্টম ব্রাঞ্চ যোগ করা যায়)।",
+            "actions": [
+                {
+                    "responseCode": "100-WORK-COMPLETE",
+                    "label": "জব-স্পেসিফিক কাজ শেষ",
+                    "goto": "STEP_110_TOOLS_SWEEP",
+                    "style": "positive"
+                }
+            ]
+        },
+        "STEP_110_TOOLS_SWEEP": {
+            "id": "STEP-110",
+            "type": "interaction",
+            "phase": "Post-Work",
+            "title": "Tools & Materials Sweep",
+            "content": "যে কোনো টুল, কন্ডাক্টর, কভার, বা স্ক্যাফোল্ড লাইনে রয়ে গেছে কিনা চেক করো।",
             "checklist": [
-                "লিঙ্ক / ফিউজ / DO ব্যারেল লাগিয়েছি",
-                "মেইন সুইচ / ব্রেকার অন করেছি",
-                "ভোল্টেজ চেক করেছি",
-                "PTW সারেন্ডার (Return) করেছি"
+                "টুল ব্যাগ ম্যাচ",
+                "স্ক্যাফোল্ড/ল্যাডার সরানো",
+                "ব্যবহৃত কন্ডাক্টর গোনা",
+                "জাঙ্ক/স্ক্র্যাপ অপসারণ"
             ],
             "actions": [
                 {
-                    "label": "লাইন সাকসেসফুলি রিস্টোরড ✅",
-                    "goto": "result_success_general",
+                    "responseCode": "110-SWEEP-DONE",
+                    "label": "সাইট ক্লিয়ার",
+                    "goto": "STEP_120_CREW_CONFIRM",
+                    "style": "neutral"
+                }
+            ]
+        },
+        "STEP_120_CREW_CONFIRM": {
+            "id": "STEP-120",
+            "type": "interaction",
+            "phase": "Post-Work",
+            "title": "Crew Confirmation",
+            "content": "সব টিম মেম্বার লাইন থেকে নেমেছে এবং নিরাপদ জোনে আছে কিনা কনফার্ম করো।",
+            "actions": [
+                {
+                    "responseCode": "120-CREW-CLEAR",
+                    "label": "টিম ক্লিয়ার",
+                    "goto": "STEP_130_REMOVE_TEMP_EARTH",
                     "style": "positive"
                 }
             ]
         },
-        "result_success_general": {
+        "STEP_130_REMOVE_TEMP_EARTH": {
+            "id": "STEP-130",
+            "type": "interaction",
+            "phase": "Restore Prep",
+            "title": "Temporary Earthing Removal",
+            "content": "কাজ শেষ হলে সব টেম্পোরারি আর্থিং অপসারণ করো এবং আর্থিং রেজিস্টার আপডেট করো।",
+            "actions": [
+                {
+                    "responseCode": "130-EARTH-REMOVED",
+                    "label": "আর্থিং অপসারণ",
+                    "goto": "STEP_140_RECONNECT_ZONE",
+                    "style": "neutral"
+                }
+            ]
+        },
+        "STEP_140_RECONNECT_ZONE": {
+            "id": "STEP-140",
+            "type": "interaction",
+            "phase": "Restore Prep",
+            "title": "Reconnect Working Area",
+            "content": "ডিসকানেক্টেড উপকরণ (জাম্পার, বাসবার, কেবল) পুনরায় সংযোগ করো এবং ভিজ্যুয়াল চেক করো।",
+            "actions": [
+                {
+                    "responseCode": "140-RECONNECTED",
+                    "label": "কাজের এলাকা পুনঃসংযোগ",
+                    "goto": "STEP_150_SD_WITHDRAW_REQUEST",
+                    "style": "positive"
+                }
+            ]
+        },
+        "STEP_150_SD_WITHDRAW_REQUEST": {
+            "id": "STEP-150",
+            "type": "interaction",
+            "phase": "Shutdown Release",
+            "title": "Shutdown Withdrawal Request",
+            "content": "কন্ট্রোল রুমকে জানান যে কাজ শেষ, শাটডাউন তুলতে প্রস্তুত।",
+            "actions": [
+                {
+                    "responseCode": "150-SD-WITHDRAW-ASK",
+                    "label": "কন্ট্রোলকে অবহিত",
+                    "goto": "STEP_160_SD_WITHDRAW_CONFIRM",
+                    "style": "neutral"
+                }
+            ]
+        },
+        "STEP_160_SD_WITHDRAW_CONFIRM": {
+            "id": "STEP-160",
+            "type": "interaction",
+            "phase": "Shutdown Release",
+            "title": "Shutdown Withdrawal Confirmation",
+            "content": "কন্ট্রোল রুম চার্জিং সিকোয়েন্স অনুমোদন করেছে কিনা নিশ্চিত করো এবং লগবুকে সাইন করো।",
+            "actions": [
+                {
+                    "responseCode": "160-SD-WITHDRAWN",
+                    "label": "অনুমোদন পেয়েছি",
+                    "goto": "STEP_170_RESTORATION",
+                    "style": "positive"
+                }
+            ]
+        },
+        "STEP_170_RESTORATION": {
+            "id": "STEP-170",
+            "type": "interaction",
+            "phase": "Energization",
+            "title": "Final Restoration",
+            "flags": ["critical"],
+            "content": "ধাপে ধাপে লাইন চার্জ করো এবং ভোল্টেজ/লোড রিডিং রেকর্ড করো।",
+            "checklist": [
+                "লিঙ্ক / ফিউজ / DO ব্যারেল লাগানো",
+                "মেইন সুইচ / ব্রেকার অন",
+                "SCADA/মিটার রিডিং নোট",
+                "PTW রিটার্ন ও সাইন-অফ"
+            ],
+            "actions": [
+                {
+                    "responseCode": "170-ENERGISED",
+                    "label": "লাইন চার্জিং কমপ্লিট",
+                    "goto": "STEP_900_SUCCESS",
+                    "style": "positive"
+                }
+            ]
+        },
+        "STEP_900_SUCCESS": {
+            "id": "STEP-900",
             "type": "result",
             "status": "success",
             "title": "✅ কাজ সফলভাবে সম্পন্ন!",
-            "content": "তুমি সঠিক সেফটি প্রোটোকল মেনে কাজ শেষ করেছ। <br><strong>সেফটি ফার্স্ট, অলওয়েজ বেস্ট!</strong>"
+            "content": "সকল সেফটি গেট মেনে তুমি কাজ শেষ করেছ। পরবর্তী কাজের আগে টিম ডিব্রিফ এবং ডকুমেন্টেশন আপডেট করো।"
         }
     }
 }

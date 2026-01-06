@@ -1,189 +1,672 @@
 {
   "meta": {
+    "schemaVersion": "2026.01",
+    "sopId": "dtr_troubleshooting",
     "appTitle": "DTR Troubleshooting SOP",
     "appSubtitle": "লাইনম্যানের ডিজিটাল গাইড",
-    "startNode": "start"
+    "description": "ডিস্ট্রিবিউশন ট্রান্সফরমারের যান্ত্রিক/ইলেক্ট্রিক্যাল ফল্টে অন-সাইট সেফটি, মেগার টেস্ট এবং টিট-বিট রিকভারি গাইড।",
+    "startNode": "STEP_010_PPE_GATE",
+    "owner": "Distribution Field Ops",
+    "lastReviewed": "2026-01-07",
+    "outcomes": {
+      "success": "STEP_900_SUCCESS",
+      "fail": "STEP_025_PTW_BLOCK"
+    }
   },
   "steps": {
-    "start": {
+    "STEP_010_PPE_GATE": {
+      "id": "STEP-010",
       "type": "interaction",
-      "content": "কল রিসিভ: 'ট্রান্সফরমার এলাকায় কারেন্ট নেই' <br>সাইটে পৌঁছে সেফটি (PPE) নিয়েছ?",
-      "note": "সবার আগে নিজের সুরক্ষা। নিচের সেফটি গিয়ারগুলো নিশ্চিত করো:",
+      "phase": "Safety Gate",
+      "title": "PPE Readiness",
+      "content": "কল রিসিভ: 'ডিটিআর এলাকায় কারেন্ট নেই'। সাইটে ঢোকার আগে PPE নিয়েছ?",
+      "note": "হেলমেট, আর্ক-রেটেড গ্লাভস, সেফটি জুতো এবং রিফ্লেক্টিভ জ্যাকেট বাধ্যতামূলক। ইনসুলেটেড ম্যাট শুধু ইনডোর LT প্যানেলে প্রয়োজন।",
       "checklist": [
-        "সেফটি হেলমেট পরেছি",
-        "হাতে গ্লাভস পরেছি",
-        "সেফটি জুতো পরেছি"
+        "সেফটি হেলমেট",
+        "১১কেভি রেটেড গ্লাভস",
+        "ডাই-ইলেকট্রিক সেফটি জুতো",
+        "রিফ্লেক্টিভ / FR জ্যাকেট",
+        "রেস্কিউ রড / শর্ট সার্কিট ক্ল্যাম্প"
       ],
       "actions": [
-        { "label": "হ্যাঁ, আমি রেডি", "goto": "visual_check", "style": "neutral" }
+        {
+          "responseCode": "010-PPE-OK",
+          "label": "হ্যাঁ, PPE রেডি",
+          "goto": "STEP_020_PTW_GATE",
+          "style": "positive"
+        }
       ]
     },
-    "visual_check": {
+    "STEP_020_PTW_GATE": {
+      "id": "STEP-020",
       "type": "interaction",
-      "content": "নিচ থেকে ট্রান্সফরমারটি ভালো করে দেখো। কেমন দেখছ?",
-      "note": "পোলে ওঠার দরকার নেই। টর্চ মেরে দেখো।",
-      "actions": [
-        { "label": "বডি ফোলা / ফেটে তেল পড়ছে / আগুন", "goto": "result_defective_visual", "style": "negative" },
-        { "label": "বাইরে থেকে ফিটফাট মনে হচ্ছে", "goto": "check_fuses", "style": "positive" }
-      ]
-    },
-    "check_fuses": {
-      "type": "interaction",
-      "content": "DO (Drop Out) ফিউজগুলোর কী অবস্থা?",
-      "note": "ফিউজগুলো ভালো করে লক্ষ্য করো।",
-      "actions": [
-        { "label": "৩টি ফিউজই উড়ে গেছে / ব্যারেল ঝুলছে", "goto": "isolation_warning", "style": "negative" },
-        { "label": "১টি বা ২টি ফিউজ গেছে", "goto": "line_fault_check", "style": "neutral" }
-      ]
-    },
-    "line_fault_check": {
-      "type": "interaction",
-      "content": "এটা সম্ভবত লাইনের ফল্ট। জাম্পার এবং লাইন চেক করে ফিউজ মারো।",
-      "note": "সাধারণত ডালপালা লাগলে ১-২টো ফিউজ কাটে।",
-      "actions": [
-        { "label": "ফিউজ মেরেছি, লাইন চালু ✅", "goto": "result_success_line", "style": "positive" },
-        { "label": "ফিউজ মারার সাথে সাথে আবার উড়ে গেল", "goto": "isolation_warning", "style": "negative" }
-      ]
-    },
-    "isolation_warning": {
-      "type": "interaction",
-      "content": "সতর্ক হও! ভেতরে ফল্ট থাকতে পারে। মেগার টেস্ট করতে হবে।",
-      "note": "আইসোলেশন (Isolation) ছাড়া মেগার করা যাবে না। নিচের কাজগুলো নিশ্চিত করো:",
+      "phase": "Permit Control",
+      "title": "PTW Confirmation",
+      "content": "কন্ট্রোল রুম থেকে ডিটিআর আইসোলেশনের PTW পেয়েছ?",
+      "note": "পারমিটে লোকেশন, DO নম্বর, অনুমোদিত কাজ এবং যোগাযোগ দায়িত্ব স্পষ্ট থাকতে হবে।",
       "checklist": [
-        "১. সব DO ব্যারেল নামিয়েছি",
-        "২. এলটি কেবিলগুলো বুশিং থেকে খুলে আলাদা করেছি"
+        "পারমিট নম্বর ও টাইম",
+        "লাইভ সিঙ্গেল লাইন ডায়াগ্রাম",
+        "যোগাযোগ চ্যানেল টেস্ট",
+        "LOTO লগ আগাম পূরণ"
       ],
       "actions": [
-        { "label": "আইসোলেশন কমপ্লিট করেছি", "goto": "megger_hv_earth", "style": "neutral" }
+        {
+          "responseCode": "020-PTW-SIGNED",
+          "label": "PTW রিসিভ করেছি",
+          "goto": "STEP_030_SD_REQUEST",
+          "style": "positive"
+        },
+        {
+          "responseCode": "020-PTW-MISSING",
+          "label": "PTW মেলেনি - কাজ থামাও",
+          "goto": "STEP_025_PTW_BLOCK",
+          "style": "negative",
+          "bypassChecklist": true
+        }
       ]
     },
-    "megger_hv_earth": {
+    "STEP_025_PTW_BLOCK": {
+      "id": "STEP-025",
+      "type": "result",
+      "status": "fail",
+      "title": "🚫 PTW অনুপস্থিত",
+      "content": "পারমিট ছাড়া DTR হ্যান্ডলিং ঝুঁকিপূর্ণ। কন্ট্রোল রুম বা সুপারভাইজারের সাথে কথা বলে বৈধ PTW সংগ্রহ করো।"
+    },
+    "STEP_030_SD_REQUEST": {
+      "id": "STEP-030",
       "type": "interaction",
-      "content": "মেগার টেস্ট ১: HV কয়েল + বডি (Earth)। রিডিং কত?",
-      "note": "মেগারের এক মাথা HT বুশিংয়ে, অন্য মাথা বডিতে (রং ছাড়া জায়গায়) লাগাও।",
+      "phase": "Shutdown",
+      "title": "Shutdown আবেদন",
+      "content": "কন্ট্রোল রুমে DO/AB সুইচ নম্বর ও আনুমানিক কাজের সময় জানিয়েছ?",
       "actions": [
-        { "label": "জিরো (0) বা খুব কম", "goto": "result_defective_hv_earth", "style": "negative" },
-        { "label": "ভালো (High Value / Infinity)", "goto": "megger_lv_earth", "style": "positive" }
+        {
+          "responseCode": "030-SD-ASKED",
+          "label": "শাটডাউন আবেদন পাঠানো",
+          "goto": "STEP_040_SD_CONFIRM",
+          "style": "neutral"
+        }
       ]
     },
-    "megger_lv_earth": {
+    "STEP_040_SD_CONFIRM": {
+      "id": "STEP-040",
       "type": "interaction",
-      "content": "মেগার টেস্ট ২: LV কয়েল + বডি (Earth)। রিডিং কত?",
-      "note": "মেগারের এক মাথা LT বুশিং রডে, অন্য মাথা বডিতে।",
+      "phase": "Shutdown",
+      "title": "Shutdown নিশ্চিতকরণ",
+      "content": "কন্ট্রোল রুম নিশ্চিত করেছে যে সংশ্লিষ্ট ফিডার ডি-এনার্জাইজড?",
       "actions": [
-        { "label": "জিরো (0) বা খুব কম", "goto": "result_defective_lv_earth", "style": "negative" },
-        { "label": "ভালো (High Value)", "goto": "megger_hv_lv", "style": "positive" }
+        {
+          "responseCode": "040-SD-OK",
+          "label": "হ্যাঁ, কনফার্ম",
+          "goto": "STEP_050_ISOLATION_BOUNDARY",
+          "style": "positive"
+        }
       ]
     },
-    "megger_hv_lv": {
+    "STEP_050_ISOLATION_BOUNDARY": {
+      "id": "STEP-050",
       "type": "interaction",
-      "content": "মেগার টেস্ট ৩: HV কয়েল + LV কয়েল। রিডিং কত?",
-      "note": "মেগারের এক মাথা HT বুশিংয়ে, অন্য মাথা LT বুশিংয়ে।",
+      "phase": "Isolation",
+      "title": "Working Zone Isolation",
+      "flags": ["critical"],
+      "content": "কাজের জোনের উভয় পাশে DO/গ্যাং সুইচ/AB ডিসকানেক্ট করে দৃশ্যমান বিচ্ছিন্নতা নিশ্চিত করো।",
+      "checklist": [
+        "ইনকামিং ও আউটগোয়িং উভয় দিক খোলা",
+        "LT কেবল ডিসকানেক্ট প্রস্তুতি",
+        "ইন্টার-জয়েন্ট জাম্পার নেমে গেছে",
+        "ডেঞ্জার ট্যাগ ঝুলছে"
+      ],
       "actions": [
-        { "label": "জিরো (0) বা কন্টিনিউটি পাচ্ছে", "goto": "result_defective_short", "style": "negative" },
-        { "label": "ইনফিনিটি / হাই ভ্যালু", "goto": "tit_bit_diagnosis", "style": "positive" }
+        {
+          "responseCode": "050-ISOLATED",
+          "label": "জোন আইসোলেটেড",
+          "goto": "STEP_060_SD_WITHDRAW_TAGGING",
+          "style": "positive"
+        }
       ]
     },
-    "tit_bit_diagnosis": {
+    "STEP_060_SD_WITHDRAW_TAGGING": {
+      "id": "STEP-060",
       "type": "interaction",
-      "content": "অভিনন্দন! ট্রান্সফরমার কয়েল ভালো আছে। সমস্যাটি 'Tit-bit'। কী সমস্যা দেখতে পাচ্ছ?",
-      "note": "ভালো করে বুশিং, তেল এবং কানেকশন চেক করো।",
+      "phase": "Isolation",
+      "title": "LOTO & Tagging",
+      "content": "ডেঞ্জার সাইন, বাউন্ডারি ফিতা এবং LOTO লগ আপডেট করো।",
+      "checklist": [
+        "LOTO লগ এন্ট্রি",
+        "ডিউটিরত সুপারভাইজারের সাইন",
+        "সাইটে সতর্কীকরণ ফ্ল্যাশার",
+        "দূর থেকে দৃশ্যমান ব্যারিকেড"
+      ],
+      "actions": [
+        {
+          "responseCode": "060-TAGGED",
+          "label": "ট্যাগিং সম্পন্ন",
+          "goto": "STEP_070_DISCHARGE",
+          "style": "neutral"
+        }
+      ]
+    },
+    "STEP_070_DISCHARGE": {
+      "id": "STEP-070",
+      "type": "interaction",
+      "phase": "Earthing",
+      "title": "Discharge Test",
+      "flags": ["critical"],
+      "content": "ডিসচার্জ রড দিয়ে HT এবং LT উভয় বুশিং স্পর্শ করে অবশিষ্ট চার্জ বের করো।",
+      "actions": [
+        {
+          "responseCode": "070-DISCHARGED",
+          "label": "চার্জ রিলিজ নিশ্চিত",
+          "goto": "STEP_080_TEMP_EARTH",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_080_TEMP_EARTH": {
+      "id": "STEP-080",
+      "type": "interaction",
+      "phase": "Earthing",
+      "title": "Temporary Earthing",
+      "content": "কাজের জোনের দুই প্রান্তে ও নিউট্রাল পয়েন্টে টেম্পোরারি আর্থ লাগাও।",
+      "checklist": [
+        "HT তিন ফেজে আর্থিং",
+        "LT বুশিংয়ের আর্থ লিড",
+        "আর্থিং কেবল দৃশ্যমান",
+        "আর্থিং রেজিস্টার আপডেট"
+      ],
+      "actions": [
+        {
+          "responseCode": "080-EARTHED",
+          "label": "আর্থিং প্রস্তুত",
+          "goto": "STEP_090_WORK_BRIEF",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_090_WORK_BRIEF": {
+      "id": "STEP-090",
+      "type": "interaction",
+      "phase": "Pre-Work",
+      "title": "Crew Briefing",
+      "content": "ডিটিআর ফল্ট ধাপ, দায়িত্ব বন্টন এবং জরুরি সিগন্যাল টিমকে বুঝিয়ে দাও।",
+      "actions": [
+        {
+          "responseCode": "090-BRIEFED",
+          "label": "ব্রিফিং সম্পন্ন",
+          "goto": "STEP_100_DIAGNOSTICS_GATE",
+          "style": "neutral"
+        }
+      ]
+    },
+    "STEP_100_DIAGNOSTICS_GATE": {
+      "id": "STEP-100",
+      "type": "interaction",
+      "phase": "Diagnostics",
+      "title": "Fault Profile Capture",
+      "content": "গ্রাহকের ফিডব্যাক, লোড শিফট এবং সাম্প্রতিক মেরামতি নোট করে ডিটিআর ডায়াগনস্টিক শুরু করো।",
+      "note": "এই ধাপ থেকে বিশেষ ব্রাঞ্চ খুলে কাজ করো এবং শেষে পোস্ট-ওয়ার্ক গেটগুলোতে ফিরে আসো।",
+      "actions": [
+        {
+          "responseCode": "100-START-DIAG",
+          "label": "ভিজ্যুয়াল ইনস্পেকশনে যাও",
+          "goto": "STEP_200_VISUAL_SWEEP",
+          "style": "neutral"
+        }
+      ]
+    },
+    "STEP_200_VISUAL_SWEEP": {
+      "id": "STEP-200",
+      "type": "interaction",
+      "phase": "Diagnostics",
+      "title": "Visual Health",
+      "content": "নিচ থেকে টর্চ মেরে ট্যাংক, ঢাল, LV বক্স এবং বুশিং দেখো।",
+      "actions": [
+        {
+          "responseCode": "200-VISUAL-DEFECT",
+          "label": "বডি ফোলা/তেল পড়ছে/আগুনের চিহ্ন",
+          "goto": "STEP_700_DEFECTIVE_VISUAL",
+          "style": "negative"
+        },
+        {
+          "responseCode": "200-VISUAL-OK",
+          "label": "বাইরের সবকিছু স্থিতিশীল",
+          "goto": "STEP_210_DO_STATUS",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_210_DO_STATUS": {
+      "id": "STEP-210",
+      "type": "interaction",
+      "phase": "Diagnostics",
+      "title": "DO Fuse Observation",
+      "content": "সব DO ব্যারেল ভালো করে দেখো – কয়টি ফিউজ কাটা?",
+      "actions": [
+        {
+          "responseCode": "210-ALL-BLOWN",
+          "label": "তিনটি ফিউজই উড়েছে",
+          "goto": "STEP_300_ISOLATION_READY",
+          "style": "negative"
+        },
+        {
+          "responseCode": "210-PARTIAL-BLOWN",
+          "label": "১ বা ২ টি ফিউজ কাটা",
+          "goto": "STEP_215_LINE_FAULT_CHECK",
+          "style": "neutral"
+        }
+      ]
+    },
+    "STEP_215_LINE_FAULT_CHECK": {
+      "id": "STEP-215",
+      "type": "interaction",
+      "phase": "Diagnostics",
+      "title": "Suspected Line Fault",
+      "content": "জাম্পার, আউটগোয়িং লাইন ও LT ফ্লাট দেখা শেষ?",
+      "note": "শুধু ১-২ টি ফিউজ কাটা মানে বেশি সম্ভাবনা লাইন ফল্টের।",
+      "actions": [
+        {
+          "responseCode": "215-LINE-CLEAR",
+          "label": "ফিউজ বদলেই লাইন চালু",
+          "goto": "STEP_910_LINE_SUCCESS",
+          "style": "positive"
+        },
+        {
+          "responseCode": "215-LINE-FAULT",
+          "label": "ফিউজ মারলেই আবার কাটে",
+          "goto": "STEP_300_ISOLATION_READY",
+          "style": "negative"
+        }
+      ]
+    },
+    "STEP_300_ISOLATION_READY": {
+      "id": "STEP-300",
+      "type": "interaction",
+      "phase": "Work",
+      "title": "Isolation & LT Drop",
+      "content": "মেগার টেস্টের আগে LT কেবল ও জাম্পার ঝুলিয়ে সম্পূর্ণ আইসোলেশন বানাও।",
+      "checklist": [
+        "সব DO ব্যারেল নেমেছে",
+        "LT কেবল বুশিং থেকে খুলে স্লিং করা",
+        "নিউট্রাল/আর্থ আলাদা",
+        "টেস্ট এলাকার গার্ডিং"
+      ],
+      "actions": [
+        {
+          "responseCode": "300-ISOLATION-COMPLETE",
+          "label": "আইসোলেশন প্রস্তুত",
+          "goto": "STEP_310_MEGGER_HV_EARTH",
+          "style": "neutral"
+        }
+      ]
+    },
+    "STEP_310_MEGGER_HV_EARTH": {
+      "id": "STEP-310",
+      "type": "interaction",
+      "phase": "Testing",
+      "title": "Megger: HV to Tank",
+      "content": "HV কয়েল বনাম বডি (Tank) মেপে দেখো।",
+      "note": "মেগারের এক প্রোব HT বুশিংয়ে, অন্যটি পরিষ্কার ধাতব বডিতে।",
+      "actions": [
+        {
+          "responseCode": "310-HV-FAIL",
+          "label": "০ বা খুব কম রিডিং",
+          "goto": "STEP_720_DEFECTIVE_HV_EARTH",
+          "style": "negative"
+        },
+        {
+          "responseCode": "310-HV-PASS",
+          "label": "হাই ভ্যালু / ইনফিনিটি",
+          "goto": "STEP_320_MEGGER_LV_EARTH",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_320_MEGGER_LV_EARTH": {
+      "id": "STEP-320",
+      "type": "interaction",
+      "phase": "Testing",
+      "title": "Megger: LV to Tank",
+      "content": "এবার LV কয়েল বনাম বডি টেস্ট করো।",
+      "actions": [
+        {
+          "responseCode": "320-LV-FAIL",
+          "label": "০ বা খুব কম",
+          "goto": "STEP_730_DEFECTIVE_LV_EARTH",
+          "style": "negative"
+        },
+        {
+          "responseCode": "320-LV-PASS",
+          "label": "হাই ভ্যালু",
+          "goto": "STEP_330_MEGGER_HV_LV",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_330_MEGGER_HV_LV": {
+      "id": "STEP-330",
+      "type": "interaction",
+      "phase": "Testing",
+      "title": "Megger: HV to LV",
+      "content": "HV এবং LV কয়েলের মধ্যে শর্ট আছে কিনা চেক করো।",
+      "actions": [
+        {
+          "responseCode": "330-HVLV-FAIL",
+          "label": "জিরো / কন্টিনিউটি",
+          "goto": "STEP_740_DEFECTIVE_SHORT",
+          "style": "negative"
+        },
+        {
+          "responseCode": "330-HVLV-PASS",
+          "label": "ইনফিনিটি",
+          "goto": "STEP_340_TITBIT_DIAGNOSIS",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_340_TITBIT_DIAGNOSIS": {
+      "id": "STEP-340",
+      "type": "interaction",
+      "phase": "Work",
+      "title": "Tit-bit Diagnosis",
+      "content": "কয়েল ভালো। এখন বুশিং/কানেকশন/তেল সংক্রান্ত টিট-বিট চিহ্নিত করো।",
+      "note": "একাধিক সমস্যাকে একসাথে হ্যান্ডেল করার জন্য প্ল্যান বানাও।",
       "multiSelect": {
         "enabled": true,
         "ctaLabel": "সমস্যাগুলো বেছে নাও",
         "planTitle": "টিট-বিট ফিক্স প্ল্যান",
-        "planSubtitle": "একাধিক ইস্যু একসাথে সমাধান করতে নিচের প্ল্যান ফলো করো।",
+        "planSubtitle": "নির্বাচিত সমস্যার জন্য তাত্ক্ষণিক সমাধান যোগ করো।",
         "emptyState": "কমপক্ষে একটি সমস্যা বেছে নাও।",
-        "proceedLabel": "সব ঠিক? চার্জিং ধাপে যাও",
-        "proceedTo": "final_charging"
+        "proceedLabel": "সব ঠিক? রি-টেস্ট করো",
+        "proceedTo": "STEP_360_RETEST_WINDOW"
       },
       "actions": [
-        { "label": "বুশিং রড / স্টাড পুড়ে গেছে", "goto": "repair_rod", "style": "neutral" },
-        { "label": "বুশিং দিয়ে তেল চুইয়ে পড়ছে", "goto": "repair_leak", "style": "neutral" },
-        { "label": "এলটি বক্সের ফিউজ ক্যারিয়ার জ্বলেছে", "goto": "repair_fuse_base", "style": "neutral" },
-        { "label": "তেল লেভেল খুব কম", "goto": "repair_oil", "style": "neutral" }
+        {
+          "responseCode": "340-ROD-ISSUE",
+          "label": "বুশিং রড/স্টাড ক্ষতিগ্রস্ত",
+          "goto": "STEP_350_REPAIR_ROD",
+          "style": "neutral"
+        },
+        {
+          "responseCode": "340-LEAK-ISSUE",
+          "label": "বুশিং দিয়ে তেল চুইয়ে পড়ছে",
+          "goto": "STEP_352_REPAIR_LEAK",
+          "style": "neutral"
+        },
+        {
+          "responseCode": "340-FUSE-ISSUE",
+          "label": "LT বক্স ফিউজ বেস পোড়া",
+          "goto": "STEP_354_REPAIR_FUSE_BASE",
+          "style": "neutral"
+        },
+        {
+          "responseCode": "340-OIL-ISSUE",
+          "label": "তেল লেভেল কম",
+          "goto": "STEP_356_REPAIR_OIL",
+          "style": "neutral"
+        }
       ]
     },
-    "repair_rod": {
+    "STEP_350_REPAIR_ROD": {
+      "id": "STEP-350",
       "type": "interaction",
-      "content": "অ্যাকশন: সাইটেই রড বদলাতে হবে।",
-      "note": "পুরানো রড খুলে নতুন ব্রাস রড এবং ওয়াশার লাগিয়ে টাইট করো। ট্রান্সফরমার নামানোর দরকার নেই।",
+      "phase": "Work",
+      "title": "Repair: Bushing Rod",
+      "content": "ক্ষতিগ্রস্ত ব্রাস রড খুলে নতুন রড, ওয়াশার ও নাট লাগাও।",
       "actions": [
-        { "label": "কাজ শেষ। কানেকশন টাইট।", "goto": "final_charging", "style": "positive" }
+        {
+          "responseCode": "350-ROD-FIXED",
+          "label": "রড/কানেকশন টাইট",
+          "goto": "STEP_360_RETEST_WINDOW",
+          "style": "positive"
+        }
       ]
     },
-    "repair_leak": {
+    "STEP_352_REPAIR_LEAK": {
+      "id": "STEP-352",
       "type": "interaction",
-      "content": "অ্যাকশন: লিকেজ বন্ধ করতে হবে।",
-      "note": "বুশিংয়ের নাট লুজ করে গ্যাসকেট বা 'O-Ring' বদলে দাও। বা এম-সিল ব্যবহার করো।",
+      "phase": "Work",
+      "title": "Repair: Oil Leak",
+      "content": "বুশিং নাট আলগা করে গ্যাসকেট বা O-Ring বদলে সিল করো; প্রয়োজনে এম-সিল।",
       "actions": [
-        { "label": "লিক বন্ধ হয়েছে।", "goto": "final_charging", "style": "positive" }
+        {
+          "responseCode": "352-LEAK-FIXED",
+          "label": "লিক বন্ধ",
+          "goto": "STEP_360_RETEST_WINDOW",
+          "style": "positive"
+        }
       ]
     },
-    "repair_fuse_base": {
+    "STEP_354_REPAIR_FUSE_BASE": {
+      "id": "STEP-354",
       "type": "interaction",
-      "content": "অ্যাকশন: কিট-ক্যাট বেস বদলাও।",
-      "note": "পুরো এলটি বক্স বদলানোর দরকার নেই। শুধু পোড়া ফিউজ বেসটি বদলে নতুন লাগাও।",
+      "phase": "Work",
+      "title": "Repair: LT Fuse Base",
+      "content": "পোড়া কিট-ক্যাট বেস খুলে নতুন বেস লাগাও; তারে সঠিক টর্কে টাইট করো।",
       "actions": [
-        { "label": "নতুন বেস লাগানো শেষ।", "goto": "final_charging", "style": "positive" }
+        {
+          "responseCode": "354-FUSE-FIXED",
+          "label": "নতুন বেস লাগানো",
+          "goto": "STEP_360_RETEST_WINDOW",
+          "style": "positive"
+        }
       ]
     },
-    "repair_oil": {
+    "STEP_356_REPAIR_OIL": {
+      "id": "STEP-356",
       "type": "interaction",
-      "content": "অ্যাকশন: তেল টপ-আপ করো।",
-      "note": "ড্রাম থেকে ভালো তেল নিয়ে টপ-আপ করো। লিক থাকলে বন্ধ করো।",
+      "phase": "Work",
+      "title": "Repair: Oil Top-up",
+      "content": "পরীক্ষিত স্টক তেল দিয়ে লেভেল মার্ক পর্যন্ত ভরো; প্রয়োজনে ডিহাইড্রেশন ট্যাঙ্কি ব্যবহার করো।",
       "actions": [
-        { "label": "তেল ভরা শেষ।", "goto": "final_charging", "style": "positive" }
+        {
+          "responseCode": "356-OIL-FILLED",
+          "label": "তেল টপ-আপ সম্পন্ন",
+          "goto": "STEP_360_RETEST_WINDOW",
+          "style": "positive"
+        }
       ]
     },
-    "final_charging": {
+    "STEP_360_RETEST_WINDOW": {
+      "id": "STEP-360",
       "type": "interaction",
-      "content": "চার্জিং প্রসিডিওর (Charging SOP)",
-      "note": "চার্জ করার আগে নিচের ধাপগুলো একে একে সম্পন্ন করো:",
+      "phase": "Testing",
+      "title": "Re-test & Reassembly",
+      "content": "সব টিট-বিট কাজ শেষে আবার মেগার/গ্ল্যান্ড টাইট করে রিডিং নিশ্চিত করো।",
       "checklist": [
-        "১. আগে DO ফিউজ মেরেছি",
-        "২. এলটি সাইডে ভোল্টেজ মেপেছি (প্রতি ফেজে ২৩০V+)",
-        "৩. ভোল্টেজ ঠিক আছে, এলটি লোড কানেক্ট করেছি"
+        "সব বুশিং নাট টর্কড",
+        "LT ক্যাবল ফেজ-ওয়ারি লেবেল",
+        "আবার মেগার (HV-LV-HV)",
+        "টপ কভার/বক্স সুরক্ষিত"
       ],
       "actions": [
-        { "label": "সব করেছি। লাইট জ্বলছে! 💡", "goto": "result_success_repair", "style": "positive" }
+        {
+          "responseCode": "360-RETEST-COMPLETE",
+          "label": "রিটেস্ট ও রিঅ্যাসেম্বলি OK",
+          "goto": "STEP_370_FINAL_CHARGING",
+          "style": "positive"
+        }
       ]
     },
-    "result_defective_visual": {
+    "STEP_370_FINAL_CHARGING": {
+      "id": "STEP-370",
+      "type": "interaction",
+      "phase": "Energization Prep",
+      "title": "Charging Checklist",
+      "note": "চার্জ করার আগে নিচের ধাপগুলো একে একে সম্পন্ন করো।",
+      "checklist": [
+        "DO ফিউজ গুছিয়ে লাগানো",
+        "LT সাইডে ভোল্টেজ মাপা (প্রতি ফেজে ≥230V)",
+        "লোড কানেকশন টাইট",
+        "ভোল্টেজ ব্যালেন্স নিশ্চিত"
+      ],
+      "actions": [
+        {
+          "responseCode": "370-CHARGED",
+          "label": "চার্জিং প্রস্তুত",
+          "goto": "STEP_110_TOOLS_SWEEP",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_110_TOOLS_SWEEP": {
+      "id": "STEP-110",
+      "type": "interaction",
+      "phase": "Post-Work",
+      "title": "Tools & Materials Sweep",
+      "content": "জব শেষ, এখন টুল, বর্জ্য, স্টিল স্ক্যাফোল্ড ইত্যাদি এলাকা থেকে সরাও।",
+      "checklist": [
+        "টুল ব্যাগ ম্যাচ",
+        "স্ক্যাফোল্ড/ল্যাডার সরানো",
+        "ব্যবহৃত কন্ডাক্টর গোনা",
+        "জাঙ্ক/স্ক্র্যাপ অপসারণ"
+      ],
+      "actions": [
+        {
+          "responseCode": "110-SWEEP-DONE",
+          "label": "সাইট ক্লিয়ার",
+          "goto": "STEP_120_CREW_CONFIRM",
+          "style": "neutral"
+        }
+      ]
+    },
+    "STEP_120_CREW_CONFIRM": {
+      "id": "STEP-120",
+      "type": "interaction",
+      "phase": "Post-Work",
+      "title": "Crew Confirmation",
+      "content": "সব সদস্য লাইভ জোন থেকে বেরিয়ে নিরাপদ অবস্থায় আছে কিনা নিশ্চিত করো।",
+      "actions": [
+        {
+          "responseCode": "120-CREW-CLEAR",
+          "label": "টিম ক্লিয়ার",
+          "goto": "STEP_130_REMOVE_TEMP_EARTH",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_130_REMOVE_TEMP_EARTH": {
+      "id": "STEP-130",
+      "type": "interaction",
+      "phase": "Restore Prep",
+      "title": "Remove Temporary Earthing",
+      "content": "সব টেম্পোরারি আর্থ খুলে আর্থিং রেজিস্টার আপডেট করো।",
+      "actions": [
+        {
+          "responseCode": "130-EARTH-REMOVED",
+          "label": "আর্থিং অপসারণ",
+          "goto": "STEP_140_RECONNECT_ZONE",
+          "style": "neutral"
+        }
+      ]
+    },
+    "STEP_140_RECONNECT_ZONE": {
+      "id": "STEP-140",
+      "type": "interaction",
+      "phase": "Restore Prep",
+      "title": "Reconnect Working Area",
+      "content": "ডিসকানেক্ট করা জাম্পার, LT কেবল এবং নিউট্রাল পুনঃসংযোগ করো ও ভিজ্যুয়াল চেক করো।",
+      "actions": [
+        {
+          "responseCode": "140-RECONNECTED",
+          "label": "কাজের এলাকা রেডি",
+          "goto": "STEP_150_SD_WITHDRAW_REQUEST",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_150_SD_WITHDRAW_REQUEST": {
+      "id": "STEP-150",
+      "type": "interaction",
+      "phase": "Shutdown Release",
+      "title": "Shutdown Withdrawal Request",
+      "content": "কন্ট্রোল রুমকে জানাও যে কাজ শেষ এবং শাটডাউন তোলার অনুরোধ পাঠাও।",
+      "actions": [
+        {
+          "responseCode": "150-SD-WITHDRAW-ASK",
+          "label": "কন্ট্রোলকে অবহিত",
+          "goto": "STEP_160_SD_WITHDRAW_CONFIRM",
+          "style": "neutral"
+        }
+      ]
+    },
+    "STEP_160_SD_WITHDRAW_CONFIRM": {
+      "id": "STEP-160",
+      "type": "interaction",
+      "phase": "Shutdown Release",
+      "title": "Shutdown Withdrawal Confirmation",
+      "content": "কন্ট্রোল রুম চার্জিং সিকোয়েন্স অনুমোদন করেছে? লগবুকে সাইন করো।",
+      "actions": [
+        {
+          "responseCode": "160-SD-WITHDRAWN",
+          "label": "অনুমোদন পেয়েছি",
+          "goto": "STEP_170_RESTORATION",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_170_RESTORATION": {
+      "id": "STEP-170",
+      "type": "interaction",
+      "phase": "Energization",
+      "title": "Final Restoration",
+      "flags": ["critical"],
+      "content": "ধাপে ধাপে চার্জ করে ভোল্টেজ/লোড রিডিং নাও এবং গ্রাহক সাপ্লাই কনফার্ম করো।",
+      "checklist": [
+        "DO / ফিউজ / ব্রেকার অন",
+        "SCADA বা মিটার রিডিং নোট",
+        "PTW রিটার্ন ও সাইন-অফ",
+        "ফিল্ড অবজারভেশন এন্ট্রি"
+      ],
+      "actions": [
+        {
+          "responseCode": "170-ENERGISED",
+          "label": "লাইন চার্জিং কমপ্লিট",
+          "goto": "STEP_900_SUCCESS",
+          "style": "positive"
+        }
+      ]
+    },
+    "STEP_700_DEFECTIVE_VISUAL": {
+      "id": "STEP-700",
       "type": "result",
       "status": "fail",
-      "title": "❌ ট্রান্সফরমার Defective (Visual Fail)",
-      "content": "বডি ফোলা বা তেল পড়া মানে ভেতরে বড় ব্লাস্ট হয়েছে। আর চেষ্টা করো না।<br><strong>অ্যাকশন:</strong> স্টোর রিটার্ন (SR) নোট বানাও এবং গাড়ি ডাকো।"
+      "title": "❌ ট্রান্সফরমার Defective (Visual)",
+      "content": "বডি ফোলা/তেল পড়া/ঝলসা দাগ মানে ভেতরে বড় ক্ষতি হয়েছে।<br><strong>অ্যাকশন:</strong> SR তৈরি করে ইউনিট পরিবর্তনের জন্য ট্রান্সপোর্ট সাজাও।"
     },
-    "result_defective_hv_earth": {
+    "STEP_720_DEFECTIVE_HV_EARTH": {
+      "id": "STEP-720",
       "type": "result",
       "status": "fail",
-      "title": "❌ ট্রান্সফরমার Defective (HV Earth)",
-      "content": "HV কয়েল বডি হয়ে গেছে। সাইটে সারানো অসম্ভব।<br><strong>অ্যাকশন:</strong> স্টোরে ফেরত পাঠাও।"
+      "title": "❌ ট্রান্সফরমার Defective (HV-Earth)",
+      "content": "HV কয়েল বডি হচ্ছে, সাইটে রিকভারি সম্ভব নয়।<br><strong>অ্যাকশন:</strong> স্টোরে ফেরত পাঠাও।"
     },
-    "result_defective_lv_earth": {
+    "STEP_730_DEFECTIVE_LV_EARTH": {
+      "id": "STEP-730",
       "type": "result",
       "status": "fail",
-      "title": "❌ ট্রান্সফরমার Defective (LV Earth)",
-      "content": "LV কয়েল বডি হয়ে গেছে।<br><strong>অ্যাকশন:</strong> ট্রান্সফরমার বদলাতে হবে।"
+      "title": "❌ ট্রান্সফরমার Defective (LV-Earth)",
+      "content": "LV কয়েল বডি হয়েছে।<br><strong>অ্যাকশন:</strong> রিলিফ ইউনিট ডিমান্ড করো।"
     },
-    "result_defective_short": {
+    "STEP_740_DEFECTIVE_SHORT": {
+      "id": "STEP-740",
       "type": "result",
       "status": "fail",
       "title": "❌ ট্রান্সফরমার Defective (Inter-turn Short)",
-      "content": "HV এবং LV কয়েল ভেতরে শর্ট হয়ে গেছে। চার্জ দিলে ব্লাস্ট করবে।<br><strong>অ্যাকশন:</strong> স্টোরে ফেরত পাঠাও।"
+      "content": "HV-LV কয়েলের মধ্যে শর্ট আছে। চার্জ দিলে ব্লাস্ট করবে।<br><strong>অ্যাকশন:</strong> স্টোর SR ও রিপ্লেসমেন্ট প্রসেস চালু করো।"
     },
-    "result_success_line": {
+    "STEP_910_LINE_SUCCESS": {
+      "id": "STEP-910",
       "type": "result",
       "status": "success",
-      "title": "✅ লাইন চালু হয়েছে!",
-      "content": "এটা ট্রান্সফরমারের দোষ ছিল না, লাইনের ফল্ট ছিল।<br><strong>গুড জব!</strong>"
+      "title": "✅ লাইন ফল্ট চিহ্নিত",
+      "content": "DTR ঠিক আছে; ফিল্ড লাইনে সমস্যা ছিল। লাইনের SOP ফলো করে রেস্ট ফিক্স করো এবং এই কেস ক্লোজ করো।"
     },
-    "result_success_repair": {
+    "STEP_900_SUCCESS": {
+      "id": "STEP-900",
       "type": "result",
       "status": "success",
-      "title": "✅ টিট-বিট রিপেয়ার সফল!",
-      "content": "তুমি একটি ট্রান্সফরমার বাঁচিয়ে দিলে।<br>গ্রাহক খুশি, বস খুশি!<br><strong>সাবাস!</strong>"
+      "title": "✅ DTR টিট-বিট রিপেয়ার সফল",
+      "content": "সব সেফটি গেট পার করে ট্রান্সফরমারকে বাঁচালে। গ্রাহক সাপ্লাই নরমাল এবং ডকুমেন্টেশন আপডেট সম্পন্ন করো।"
     }
   }
 }
